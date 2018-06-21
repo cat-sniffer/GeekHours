@@ -32,21 +32,3 @@ Field      | Type Affinity | Null | Key | Default | Note
 GeekHours have 2 modules. One is `command` module defined `Command` class to handle inputs from stdin,
 and the other is `database` module defined `Database` class to connect/close database and /insert/update/delete
 records.
-
-The `command` module defines the following functions:
-
-get_date()
-get_hours()
-get_course()
-register()
-update()
-delete()
-
-The `database` module defines the following functions:
-
-connect_db()
-save_db()
-show_table()
-insert_row()
-update_row()
-delete_row()
