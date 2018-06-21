@@ -20,12 +20,21 @@ The sqlite database file is saved as `$HOME/.geekhours.db` with 664 permission.
 
 GeekHours saves data to `sqlite` using `sqlite3` of the Python 3. The following is the database schema.
 
+**Donelist:**
+
 Field      | Type Affinity | Null | Key | Default | Note
 -----      | ------------- | ---- | --- | ------- | -----
 `id`       | INTEGER       | NO   | PRI | `id`+1  | A primary key
 `date`     | TEXT          | NO   |     | date()  | Studied date
 `course`   | TEXT          | NO   |     | Unknown | Course which user studied
 `duration` | TEXT          | NO   |     | time()  | Studied time duration
+
+**Course:**
+
+Field      | Type Affinity | Null | Key | Default | Note
+-----      | ------------- | ---- | --- | ------- | -----
+`id`       | INTEGER       | NO   | PRI | `id`+1  | A primary key
+`name`     | TEXT          | NO   |     | Unknown | Course name
 
 ## Database access methods
 
