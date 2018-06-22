@@ -38,6 +38,6 @@ Field      | Type Affinity | Null | Key | Default | Note
 
 ## Database access methods
 
-GeekHours have 2 modules. One is `command` module defined `Command` class to handle inputs from stdin,
-and the other is `database` module defined `Database` class to connect/close database and /insert/update/delete
-records.
+GeekHours have 2 modules. One is `command` module defined `Command` class to handle inputs from stdin.
+And the other is `database` module defined `Database` class to communicate with a database such as
+connect/close and insert/update/delete records.
