@@ -12,6 +12,8 @@ class TestDatabase(unittest.TestCase):
         db_name = '.geekhours.db'
         cls._db_path = path.join(path.dirname(__file__), db_name)
         cls._db = Database()
+        cls._connection = cls._db.connect_db(cls._db_path)
+        cls._tables = cls._db.create_table()
 
     @classmethod
     def tearDownClass(cls):
@@ -50,3 +52,32 @@ class TestDatabase(unittest.TestCase):
         closed_id = str(closed_id)
 
         self.assertIn(connected_id, closed_id)
+
+    def test_create_table(self):
+        """
+        Test create_table() creates a table.
+        Verify that the table schema and the table schema created by SetUpClass() are equal.
+        """
+        # Prepare the table schemas
+        donelist_clm = ("CREATE TABLE donelist ("
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        "date TEXT NOT NULL, "
+                        "course TEXT NOT NULL, "
+                        "duration TEXT NOT NULL)")
+
+        course_clm = ("CREATE TABLE course ("
+                      "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                      "name TEXT NOT NULL)")
+
+        ##### donelist
+        donelist = self._db.cur.execute("SELECT sql from sqlite_master \
+                                             WHERE type = 'table' AND name = 'donelist'")
+        # Cast string to tuple to assertEqual() table schemas
+        donelist_clm = tuple([donelist_clm])
+        self.assertEqual(donelist.fetchone(), donelist_clm)
+
+        ##### course
+        course = self._db.cur.execute("SELECT sql from sqlite_master \
+                                           WHERE type = 'table' AND name = 'course'")
+        course_clm = tuple([course_clm])
+        self.assertEqual(course.fetchone(), course_clm)
