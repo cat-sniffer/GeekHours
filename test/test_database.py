@@ -142,3 +142,34 @@ class TestDatabase(unittest.TestCase):
         self.assertNotIn(self._course_name and self._date and self._duration, check_donelist)
         # 'check_donelist[0][1:]' for the ID elimination
         self.assertEqual(update_donelist, check_donelist[0][1:])
+
+    def test_remove(self):
+        """
+        Test remove() removes a record.
+        Record of table 'donelist' should be deleted by matching date and course name.
+        Record of table 'course' should be deleted by matching course name.
+        """
+        #self._db.insert_record(self._course, self._courses)
+        self._db.insert(self._course, self._course_fields)
+        #self._db.insert_record(self._donelist, self._record)
+        self._db.insert(self._donelist, self._donelist_fields)
+        self._db.cur.execute('DELETE FROM donelist WHERE course=? AND date=?',
+                             (self._course_name, self._date,))
+        self._db.cur.execute('DELETE FROM course WHERE name=?', (self._course_name,))
+        self._db.con.commit()
+
+        ##### course
+        #check_course = self._db.show(self._course)
+        check_course = self._db.cur.execute('SELECT * FROM course').fetchall()
+        self.assertNotIn(self._course_name, check_course)
+
+        ##### donelist
+        #check_donelist = self._db.show(self._donelist)
+        check_donelist = self._db.cur.execute('SELECT * FROM donelist').fetchall()
+        self.assertNotIn(self._course_name and self._date, check_donelist)
+
+
+        # Restore records to the original record for next tests.
+        self._db.cur.execute('INSERT INTO course(id, name) VALUES (?, ?)',
+                             (1, self._course_name,))
+        self._db.con.commit()
