@@ -108,3 +108,40 @@ class Database:
             print("No such table '{}'.".format(table))
             print('Failed to insert a record.')
             exit()
+
+    def update(self, table, course_name, val, date=None):
+        """
+        Update a record with replacing.
+
+        donelist: Search by date and course name.
+        If found a matched record, the record will be replaced with new fields.
+
+        course: Search by course name.
+        If found a matched record, the record will be replaced with a new course name.
+        """
+        ##### donelist
+        if table is self.donelist:
+            donelist = self.cur.execute('SELECT * FROM donelist WHERE course=? AND date=?',
+                                        (course_name, date,))
+            ret = donelist.fetchall()
+            if ret:
+                self.cur.execute('UPDATE donelist SET date=?, course=?, duration=? WHERE course=?\
+                                 AND date=?', (val[0], val[1], val[2], course_name, date,))
+                self.con.commit()
+            else:
+                print("NO such fields '{}' '{}' in '{}'.".format(date, course_name, table))
+
+        ##### course
+        elif table is self.course:
+            course = self.cur.execute('SELECT * FROM course WHERE name=?', (course_name,))
+            ret = course.fetchall()
+            if ret:
+                self.cur.execute('UPDATE course SET name=? WHERE name=?', (val, course_name,))
+                self.con.commit()
+            else:
+                print("NO such course name '{}' in '{}.'".format(course_name, table))
+
+        else:
+            print("No such table '{}'.".format(table))
+            print('Failed to update record.')
+            exit()

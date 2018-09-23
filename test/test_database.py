@@ -108,3 +108,37 @@ class TestDatabase(unittest.TestCase):
         donelist = self._db.cur.execute('SELECT * FROM donelist').fetchall()
         # donelist: [(1, '0801', 'python', '5')]
         self.assertEqual(donelist[0][1:], self._donelist_fields)
+
+    def test_update(self):
+        """ Test that update() replace a record and update it appropriately. """
+        self._db.insert(self._course, self._course_fields)
+        self._db.insert(self._donelist, self._donelist_fields)
+        update_donelist = ('0802', 'art', '3')
+        update_course = ('history')
+        self._db.cur.execute('UPDATE donelist SET date=?, course=?, duration=? WHERE course=?\
+                                  AND date=?', (update_donelist[0], update_donelist[1],
+                                                update_donelist[2], self._course_name,
+                                                self._date,))
+        self._db.cur.execute('UPDATE course SET name=? WHERE name=?',
+                             (update_course, self._course_name,))
+        self._db.con.commit()
+
+        ##### course
+        check_course = self._db.cur.execute('SELECT * FROM course').fetchall()
+        self.assertNotIn(self._course_name, check_course)
+        # Get the index number of a field to be replaced
+        index = self._course_fields.index(self._course_name)
+        # Replace the field with new corse name
+        self._course_fields[index] = update_course
+        # Create a list of updated fields of course
+        lst = []
+        for elem in check_course:
+            lst.append(elem[1])
+        self.assertIn(update_course, lst)
+
+        ##### donelist
+        check_donelist = self._db.cur.execute('SELECT * FROM donelist').fetchall()
+        # Assert that "original fields" are not in "updated fileds"
+        self.assertNotIn(self._course_name and self._date and self._duration, check_donelist)
+        # 'check_donelist[0][1:]' for the ID elimination
+        self.assertEqual(update_donelist, check_donelist[0][1:])
