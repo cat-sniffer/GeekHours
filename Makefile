@@ -8,4 +8,9 @@ install:
 test:
 	python3 -m unittest -v test/test_database.py
 
-.PHONY: install test
+lint:
+	-pylint -r n $$(find . -type f -name "*.py")
+	-pycodestyle $$(find . -type f -name "*.py")
+	-yapf $$(find . -type f -name "*.py")
+
+.PHONY: install test lint
