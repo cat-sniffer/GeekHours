@@ -14,6 +14,13 @@ class TestDatabase(unittest.TestCase):
         cls._db = Database()
         cls._connection = cls._db.connect_db(cls._db_path)
         cls._tables = cls._db.create_table()
+        cls._donelist = 'donelist'
+        cls._course = 'course'
+        cls._course_name = 'python'
+        cls._date = '0801'
+        cls._duration = '5'
+        cls._donelist_fields = (cls._date, cls._course_name, cls._duration)
+        cls._course_fields = [('python'), ('art'), ('math')]
 
     @classmethod
     def tearDownClass(cls):
@@ -81,3 +88,23 @@ class TestDatabase(unittest.TestCase):
                                            WHERE type = 'table' AND name = 'course'")
         course_clm = tuple([course_clm])
         self.assertEqual(course.fetchone(), course_clm)
+
+    def test_show(self):
+        """
+        Test show() shows the records.
+        Verify that the inserted record and retrieved record are equal.
+        """
+        ##### course
+        self._db.insert(self._course, self._course_fields)
+        course = self._db.cur.execute('SELECT * FROM course').fetchall()
+        # course: [(1, 'python'), (2, 'art'), (3, 'math')]
+        # self._course_fields: ['python', 'art', 'math']
+        self.assertEqual(course[0][1], self._course_fields[0])
+        self.assertEqual(course[1][1], self._course_fields[1])
+        self.assertEqual(course[2][1], self._course_fields[2])
+
+        ###### donelist
+        self._db.insert(self._donelist, self._donelist_fields)
+        donelist = self._db.cur.execute('SELECT * FROM donelist').fetchall()
+        # donelist: [(1, '0801', 'python', '5')]
+        self.assertEqual(donelist[0][1:], self._donelist_fields)
