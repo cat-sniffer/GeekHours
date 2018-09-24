@@ -49,11 +49,6 @@ class TestDatabase(unittest.TestCase):
         self._db.connect_db(self._db_path)
         self._db.close_db()
 
-        """
-        '(hex(id(self._db.con)))' returns
-        '<built-in method close of sqlite3.Connection object at CONNECTED_ID>'.
-        Assert that the connected id is closed.
-        """
         connected_id = (hex(id(self._db.con)))
         closed_id = self._db.con.close
         closed_id = str(closed_id)

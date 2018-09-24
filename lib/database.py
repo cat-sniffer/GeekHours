@@ -57,18 +57,19 @@ class Database:
     def insert(self, table, val):
         """
         Insert a new record into a table.
-        If course name which is not in this table is used for insertion into donelist,
-        the record will be discurded.
+        In the following cases, insertion will be discurded.
+
+        course:
+        * When course name which is already registered is used for insertion
+
+        donelist:
+        * When course name which is not in the table 'course' is used for insertsion
         """
         ##### course
         if table is self.course:
             course = self.cur.execute('SELECT * FROM course')
             course_names = course.fetchall()
             if course_names:
-                """
-                Check if the same records already exist.
-                Validate 'val' and avoid duplication.
-                """
                 for elem in val:
                     ret = any(elem in course for course in course_names)
                     if ret:
@@ -78,10 +79,6 @@ class Database:
                         self.con.commit()
                         print("Add new course '{}' in course.".format(val))
             else:
-                """
-                If no records in table,
-                add 'val' without validation.
-                """
                 for elem in val:
                     self.cur.execute('INSERT INTO course(name) VALUES (?)', (elem,))
                 self.con.commit()
@@ -89,10 +86,6 @@ class Database:
 
         ##### donelsit
         elif table is self.donelist:
-            """
-            Validate the input course name
-            exists in the table 'course'.
-            """
             course = self.cur.execute('SELECT * FROM course')
             course_names = course.fetchall()
             ret = any(val[1] in course for course in course_names)
