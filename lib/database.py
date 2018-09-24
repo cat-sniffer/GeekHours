@@ -84,7 +84,7 @@ class Database:
                 self.con.commit()
                 print("Add new course '{}' in course.".format(val))
 
-        ##### donelsit
+        ##### donelist
         elif table is self.donelist:
             course = self.cur.execute('SELECT * FROM course')
             course_names = course.fetchall()
