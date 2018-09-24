@@ -12,8 +12,8 @@ class TestDatabase(unittest.TestCase):
         db_name = '.geekhours.db'
         cls._db_path = path.join(path.dirname(__file__), db_name)
         cls._db = Database()
-        cls._connection = cls._db.connect_db(cls._db_path)
-        cls._tables = cls._db.create_table()
+        cls._db.connect_db(cls._db_path)
+        cls._db.create_table()
         cls._donelist = 'donelist'
         cls._course = 'course'
         cls._course_name = 'python'
@@ -29,7 +29,7 @@ class TestDatabase(unittest.TestCase):
 
     def setUp(self):
         """ Connect database before calling each test function. """
-        self.connect = self._db.connect_db(self._db_path)
+        self._db.connect_db(self._db_path)
 
     def tearDown(self):
         """ Close database after each test function. """
