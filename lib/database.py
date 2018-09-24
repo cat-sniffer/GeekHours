@@ -1,7 +1,7 @@
 """ Database.py is a moule to comunicate with a database. """
 
 import sqlite3
-from sys import exit
+import sys
 
 __all__ = ['Database']
 
@@ -52,7 +52,7 @@ class Database:
             self.cur.execute('SELECT * FROM course').fetchall()
         else:
             print("No such table '{}'.".format(table))
-            exit()
+            sys.exit()
 
     def insert(self, table, val):
         """
@@ -107,7 +107,7 @@ class Database:
         else:
             print("No such table '{}'.".format(table))
             print('Failed to insert a record.')
-            exit()
+            sys.exit()
 
     def update(self, table, course_name, val, date=None):
         """
@@ -144,7 +144,7 @@ class Database:
         else:
             print("No such table '{}'.".format(table))
             print('Failed to update record.')
-            exit()
+            sys.exit()
 
     def remove(self, table, course_name, date=None):
         """
@@ -181,4 +181,4 @@ class Database:
         else:
             print("No such table '{}'.".format(table))
             print('Failed to remove record.')
-            exit()
+            sys.exit()
