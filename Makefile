@@ -1,10 +1,11 @@
 PTH_FILE = geekhours.pth
 PTH_PATH = /usr/lib/python3.5/dist-packages
 PYTHON_FILES = $(shell find . -type f -name "*.py")
+CURRENT_DIR = $(CURDIR)
 
 install:
 	mkdir -p $(PTH_PATH)
-	echo $$(pwd)/lib > $(PTH_PATH)/$(PTH_FILE)
+	echo $(CURRENT_DIR)/lib > $(PTH_PATH)/$(PTH_FILE)
 
 test:
 	python3 -m unittest -v test/test_database.py
