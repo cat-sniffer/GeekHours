@@ -12,6 +12,6 @@ test:
 lint:
 	pylint -r n $(PYTHON_FILES)
 	pycodestyle --max-line-length=100 $(PYTHON_FILES)
-	yapf -d $( PYTHON_FILES)
+	yapf -d $(PYTHON_FILES)
 
 .PHONY: install test lint
