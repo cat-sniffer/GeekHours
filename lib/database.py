@@ -54,54 +54,6 @@ class Database:
             print("No such table '{}'.".format(table))
             sys.exit()
 
-    def insert(self, table, val):
-        """
-        Insert a new record into a table.
-        In the following cases, insertion will be discurded.
-
-        course:
-        * When course name which is already registered is used for insertion
-
-        donelist:
-        * When course name which is not in the table 'course' is used for insertsion
-        """
-        ##### course
-        if table is self.course:
-            course = self.cur.execute('SELECT * FROM course')
-            course_names = course.fetchall()
-            if course_names:
-                for elem in val:
-                    ret = any(elem in course for course in course_names)
-                    if ret:
-                        print("'{}' already exists. This was not inserted.".format(elem))
-                    else:
-                        self.cur.execute('INSERT INTO course(name) VALUES (?)', (elem,))
-                        self.con.commit()
-                        print("Add new course '{}' in course.".format(val))
-            else:
-                for elem in val:
-                    self.cur.execute('INSERT INTO course(name) VALUES (?)', (elem,))
-                self.con.commit()
-                print("Add new course '{}' in course.".format(val))
-
-        ##### donelist
-        elif table is self.donelist:
-            course = self.cur.execute('SELECT * FROM course')
-            course_names = course.fetchall()
-            ret = any(val[1] in course for course in course_names)
-            if ret:
-                self.cur.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)',
-                                 val)
-                self.con.commit()
-                print("Add new record '{}' in donelist.".format(val))
-            else:
-                print("Invalid course name '{}'.".format(val[1]))
-
-        else:
-            print("No such table '{}'.".format(table))
-            print('Failed to insert a record.')
-            sys.exit()
-
     def update(self, table, course_name, val, date=None):
         """
         Update a record with replacing.
