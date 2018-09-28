@@ -2,6 +2,7 @@
 
 import sqlite3
 import sys
+from typing import List
 
 __all__ = ['Database']
 
@@ -38,7 +39,7 @@ class Database:
 
         course = ("CREATE TABLE course ("
                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                  "name TEXT NOT NULL)")
+                  "name TEXT NOT NULL UNIQUE)")
 
         self.cur.execute(donelist)
         self.cur.execute(course)
@@ -54,12 +55,17 @@ class Database:
             print("No such table '{}'.".format(table))
             sys.exit()
 
-    def insert_course(self):
+    def insert_course(self, courses: List[str]):
         """ Insert course name.
 
         Insert course name into the 'course' table.
         Insertion of the course name which is already registered will be discarded.
         """
+        for elem in courses:
+            with self.con:
+                self.con.execute('INSERT INTO course(name) VALUES (?)', (elem,))
+                print("Add '{}' in course.".format(elem))
+        return None
 
     def insert_donelist(self):
         """ Insert donelist.

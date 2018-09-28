@@ -2,6 +2,7 @@
 
 from os import path, remove
 import unittest
+import sqlite3
 from lib.database import Database
 
 class TestDatabase(unittest.TestCase):
@@ -21,7 +22,7 @@ class TestDatabase(unittest.TestCase):
         cls._date = '0801'
         cls._duration = '5'
         cls._donelist_fields = (cls._date, cls._course_name, cls._duration)
-        cls._course_fields = [('python'), ('art'), ('math')]
+        cls._courses = [('python'), ('art'), ('math')]
 
     @classmethod
     def tearDownClass(cls):
@@ -56,6 +57,7 @@ class TestDatabase(unittest.TestCase):
 
         self.assertIn(connected_id, closed_id)
 
+    @unittest.skip("Skip")
     def test_create_table(self):
         """
         Test create_table() creates a table.
@@ -84,3 +86,17 @@ class TestDatabase(unittest.TestCase):
                                            WHERE type = 'table' AND name = 'course'")
         course_clm = tuple([course_clm])
         self.assertEqual(course.fetchone(), course_clm)
+
+    def test_insert_course(self):
+        """ Test for insert_course()
+
+        Check:
+        * when SQL statement succeeds, None will be returned.
+        * when SQL statement fails, exception will be returned.
+        """
+        courses = [('python'), ('python')]
+        ret = self._db.insert_course(self._courses)
+        self.assertIsNone(ret)
+
+        with self.assertRaises(sqlite3.IntegrityError):
+            self._db.insert_course(courses)
