@@ -53,3 +53,17 @@ class Database:
         else:
             print("No such table '{}'.".format(table))
             sys.exit()
+
+    def insert_course(self):
+        """ Insert course name.
+
+        Insert course name into the 'course' table.
+        Insertion of the course name which is already registered will be discarded.
+        """
+
+    def insert_donelist(self):
+        """ Insert donelist.
+
+        Insert donelist into the 'donelist' table.
+        The course name must be a registered name in the 'course' table.
+        """
