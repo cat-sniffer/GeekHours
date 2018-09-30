@@ -21,7 +21,6 @@ class TestDatabase(unittest.TestCase):
         cls._course_name = 'python'
         cls._date = '0801'
         cls._duration = '5'
-        cls._donelist_fields = (cls._date, cls._course_name, cls._duration)
         cls._courses = [('python'), ('art'), ('math')]
 
     @classmethod
@@ -100,3 +99,18 @@ class TestDatabase(unittest.TestCase):
 
         with self.assertRaises(sqlite3.IntegrityError):
             self._db.insert_course(courses)
+
+    def test_insert_donelist(self):
+        """ Test for insert_donelist()
+
+        Check that
+        * None is returned when SQL statement succeeds.
+        * Exception is returned when SQL statement fails.
+        """
+        self._db.insert_course(self._courses)
+        ret = self._db.insert_donelist(self._date, self._course_name, self._duration)
+        self.assertIsNone(ret)
+
+        course_name = 'japanese'
+        ret = self._db.insert_donelist(self._date, course_name, self._duration)
+        self.assertFalse(ret)

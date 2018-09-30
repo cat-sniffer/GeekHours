@@ -67,9 +67,21 @@ class Database:
                 print("Add '{}' in course.".format(elem))
         return None
 
-    def insert_donelist(self):
+    def insert_donelist(self, date: str, course: str, duration: str):
         """ Insert donelist.
 
         Insert donelist into the 'donelist' table.
         The course name must be a registered name in the 'course' table.
         """
+        ret = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
+        check = ret.fetchall()
+
+        if not check:
+            print("No such course in 'course' table.")
+            return False
+
+        with self.con:
+            self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)',
+                             (date, course, duration,))
+            print("Add '{} {} {}' in donelist.".format(date, course, duration))
+        return None
