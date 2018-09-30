@@ -33,7 +33,11 @@ class TestDatabase(unittest.TestCase):
         self._db.connect_db(self._db_path)
 
     def tearDown(self):
-        """ Close database after each test function. """
+        """ Delete records and close database after each test function is run. """
+        self._db.cur.execute('DELETE FROM donelist')
+        self._db.con.commit()
+        self._db.cur.execute('DELETE FROM course')
+        self._db.con.commit()
         self._db.close_db()
 
     def test_connect_db(self):
@@ -49,12 +53,13 @@ class TestDatabase(unittest.TestCase):
         """
         self._db.connect_db(self._db_path)
         self._db.close_db()
-
         connected_id = (hex(id(self._db.con)))
         closed_id = self._db.con.close
         closed_id = str(closed_id)
-
         self.assertIn(connected_id, closed_id)
+
+        # Open database to make tearDown pass
+        self._db.connect_db(self._db_path)
 
     @unittest.skip("Skip")
     def test_create_table(self):
