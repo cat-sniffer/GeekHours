@@ -47,13 +47,13 @@ class Database:
 
     def show(self, table):
         """  Show table """
-        if self.donelist:
-            self.cur.execute('SELECT * FROM donelist').fetchall()
-        elif self.course:
-            self.cur.execute('SELECT * FROM course').fetchall()
+        if table is self.course:
+            ret = self.cur.execute('SELECT * FROM course').fetchall()
+        elif table is self.donelist:
+            ret = self.cur.execute('SELECT * FROM donelist').fetchall()
         else:
             print("No such table '{}'.".format(table))
-            sys.exit()
+        return ret
 
     def insert_course(self, courses: List[str]):
         """ Insert course name.
