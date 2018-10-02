@@ -103,9 +103,23 @@ class Database:
 
         return None
 
-    def update_donelist(self):
+    def update_donelist(self, old_date, old_course: str, new_date: str, new_course: str, new_duration: str):
         """ Update record of 'donelist' table.
 
         Search record by date and course name, and if found matched record replace the record by
         new record.
         """
+        ret = self.con.execute('SELECT date, course FROM donelist WHERE date=? AND course=?',
+                               (old_date, old_course,))
+        check = ret.fetchall()
+
+        if not check:
+            raise RuntimeError("No such record in 'donelist' table.")
+
+        with self.con:
+            self.cur.execute('UPDATE donelist SET date=?, course=?, duration=?\
+                             WHERE date=? AND course=?',
+                             (new_date, new_course, new_duration, old_date, old_course,))
+            print('Updated record.')
+
+        return None

@@ -134,3 +134,22 @@ class TestDatabase(unittest.TestCase):
 
         with self.assertRaises(RuntimeError):
             self._db.update_course(self._course_name, new_course)
+
+    def test_update_donelist(self):
+        """ Test for update_doelist()
+
+        Check that
+        * None is returned when SQL statement succeeds.
+        * Exception is returned when SQL statement fails.
+        """
+        new_date = '1001'
+        new_course = 'history'
+        new_duration = '1'
+
+        self._db.insert_course(self._courses)
+        self._db.insert_donelist(self._date, self._course_name, self._duration)
+        ret = self._db.update_donelist(self._date, self._course_name, new_date, new_course, new_duration)
+        self.assertIsNone(ret)
+
+        with self.assertRaises(RuntimeError):
+            self._db.update_donelist(self._date, self._course_name, new_date, new_course, new_duration)
