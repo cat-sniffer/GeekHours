@@ -85,3 +85,16 @@ class Database:
                              (date, course, duration,))
             print("Add '{} {} {}' in donelist.".format(date, course, duration))
         return None
+
+    def update_course(self):
+        """ Update course name of 'course' table.
+
+        Replace old_course by new_course.
+        """
+
+    def update_donelist(self):
+        """ Update record of 'donelist' table.
+
+        Search record by date and course name, and if found matched record replace the record by
+        new record.
+        """
