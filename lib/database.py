@@ -53,7 +53,7 @@ class Database:
             ret = self.cur.execute('SELECT * FROM donelist').fetchall()
             print(ret)
         else:
-            print("No such table '{}'.".format(table))
+            raise RuntimeError("No such table.")
         return ret
 
     def insert_course(self, courses: List[str]):
