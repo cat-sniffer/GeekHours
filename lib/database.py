@@ -124,8 +124,19 @@ class Database:
 
         return None
 
-    def remove_course(self):
+    def remove_course(self, course: str):
         """ Remove course name from 'course' table. """
+        ret = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
+        check = ret.fetchall()
+
+        if not check:
+            raise RuntimeError("No such course in 'course' table.")
+
+        with self.con:
+            self.cur.execute('DELETE FROM course WHERE name=?', (course,))
+            print("Removed '{}' from course.".format(course))
+
+        return None
 
     def remove_donelist(self):
         """ Remove record from 'donelist' table.
