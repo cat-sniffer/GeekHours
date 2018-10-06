@@ -86,11 +86,22 @@ class Database:
             print("Add '{} {} {}' in donelist.".format(date, course, duration))
         return None
 
-    def update_course(self):
+    def update_course(self, old_course: str, new_course: str):
         """ Update course name of 'course' table.
 
         Replace old_course by new_course.
         """
+        ret = self.con.execute('SELECT name FROM course WHERE name=?', (old_course,))
+        check = ret.fetchall()
+
+        if not check:
+            raise RuntimeError("No such course in 'course' table.")
+
+        with self.con:
+            self.cur.execute('UPDATE course SET name=? WHERE name=?', (new_course, old_course,))
+            print("Updated '{}' by '{}'".format(old_course, new_course))
+
+        return None
 
     def update_donelist(self):
         """ Update record of 'donelist' table.

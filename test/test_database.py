@@ -119,3 +119,18 @@ class TestDatabase(unittest.TestCase):
         course_name = 'japanese'
         ret = self._db.insert_donelist(self._date, course_name, self._duration)
         self.assertFalse(ret)
+
+    def test_update_course(self):
+        """ Test for update_course()
+
+        Check that
+        * None is returned when SQL statement succeeds.
+        * Exception is returned when SQL statement fails.
+        """
+        new_course = 'history'
+        self._db.insert_course(self._courses)
+        ret = self._db.update_course(self._course_name, new_course)
+        self.assertIsNone(ret)
+
+        with self.assertRaises(RuntimeError):
+            self._db.update_course(self._course_name, new_course)
