@@ -63,35 +63,34 @@ class TestDatabase(unittest.TestCase):
         # Open database to make tearDown pass
         self._db.connect_db(self._db_path)
 
-    @unittest.skip("Skip")
     def test_create_table(self):
         """
         Test create_table() creates a table.
         Verify that the table schema and the table schema created by SetUpClass() are equal.
         """
         # Prepare the table schemas
-        donelist_clm = ("CREATE TABLE donelist ("
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        "date TEXT NOT NULL, "
-                        "course TEXT NOT NULL, "
-                        "duration TEXT NOT NULL)")
+        expected_donelist = ("CREATE TABLE donelist ("
+                             "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                             "date TEXT NOT NULL, "
+                             "course TEXT NOT NULL, "
+                             "duration TEXT NOT NULL)")
 
-        course_clm = ("CREATE TABLE course ("
-                      "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                      "name TEXT NOT NULL)")
+        expected_course = ("CREATE TABLE course ("
+                           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                           "name TEXT NOT NULL UNIQUE)")
 
         ##### donelist
         donelist = self._db.cur.execute("SELECT sql from sqlite_master \
                                              WHERE type = 'table' AND name = 'donelist'")
         # Cast string to tuple to assertEqual() table schemas
-        donelist_clm = tuple([donelist_clm])
-        self.assertEqual(donelist.fetchone(), donelist_clm)
+        expected_donelist = tuple([expected_donelist])
+        self.assertEqual(donelist.fetchone(), expected_donelist)
 
         ##### course
         course = self._db.cur.execute("SELECT sql from sqlite_master \
                                            WHERE type = 'table' AND name = 'course'")
-        course_clm = tuple([course_clm])
-        self.assertEqual(course.fetchone(), course_clm)
+        expected_course = tuple([expected_course])
+        self.assertEqual(course.fetchone(), expected_course)
 
     def test_show(self):
         """ Test for show()
