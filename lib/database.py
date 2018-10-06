@@ -138,8 +138,21 @@ class Database:
 
         return None
 
-    def remove_donelist(self):
+    def remove_donelist(self, date: str, course: str):
         """ Remove record from 'donelist' table.
 
         Search record by date and course name and if found matched record, it will be removed.
         """
+        ret = self.con.execute('SELECT date, course FROM donelist WHERE date=? AND course=?',
+                               (date, course,))
+        check = ret.fetchall()
+
+        if not check:
+            raise RuntimeError("No such record in 'donelist' table.")
+
+        with self.con:
+            self.cur.execute('DELETE FROM donelist WHERE date=? AND course=?',
+                             (date, course,))
+            print('Removed record.')
+
+        return None

@@ -167,3 +167,18 @@ class TestDatabase(unittest.TestCase):
 
         with self.assertRaises(RuntimeError):
             self._db.remove_course(self._course_name)
+
+    def test_remove_donelist(self):
+        """ Test for remove_donelist()
+
+        Check that
+        * None is returned when SQL statement succeeds.
+        * Exception is returned when SQL statement fails.
+        """
+        self._db.insert_course(self._courses)
+        self._db.insert_donelist(self._date, self._course_name, self._duration)
+        ret = self._db.remove_donelist(self._date, self._course_name)
+        self.assertIsNone(ret)
+
+        with self.assertRaises(RuntimeError):
+            self._db.remove_donelist(self._date, self._course_name)
