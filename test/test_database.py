@@ -117,8 +117,8 @@ class TestDatabase(unittest.TestCase):
         self.assertIsNone(ret)
 
         course_name = 'japanese'
-        ret = self._db.insert_donelist(self._date, course_name, self._duration)
-        self.assertFalse(ret)
+        with self.assertRaises(RuntimeError):
+            self._db.insert_donelist(self._date, course_name, self._duration)
 
     def test_update_course(self):
         """ Test for update_course()

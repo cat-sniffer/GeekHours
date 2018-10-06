@@ -78,8 +78,7 @@ class Database:
         check = ret.fetchall()
 
         if not check:
-            print("No such course in 'course' table.")
-            return False
+            raise RuntimeError("No such course in 'course' table.")
 
         with self.con:
             self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)',
