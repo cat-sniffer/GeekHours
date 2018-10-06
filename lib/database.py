@@ -123,3 +123,12 @@ class Database:
             print('Updated record.')
 
         return None
+
+    def remove_course(self):
+        """ Remove course name from 'course' table. """
+
+    def remove_donelist(self):
+        """ Remove record from 'donelist' table.
+
+        Search record by date and course name and if found matched record, it will be removed.
+        """
