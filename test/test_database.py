@@ -93,6 +93,37 @@ class TestDatabase(unittest.TestCase):
         course_clm = tuple([course_clm])
         self.assertEqual(course.fetchone(), course_clm)
 
+    def test_show(self):
+        """ Test for show()
+
+        Check:
+        * if valid table name is passed, return records of the table.
+        * if invalid table name is passed, return False.
+        """
+        invalid_table = 'test'
+
+        ##### course
+        self._db.insert_course(self._courses)
+        ret = self._db.show(self._course)
+        i = 0
+
+        while i < len(ret):
+            self.assertEqual(ret[i][1], self._courses[i])
+            i += 1
+
+        with self.assertRaises(RuntimeError):
+            self._db.show(invalid_table)
+
+        ###### donelist
+        self._db.insert_donelist(self._date, self._course_name, self._duration)
+        ret = self._db.show(self._donelist)
+        self.assertEqual(ret[0][1], self._date)
+        self.assertEqual(ret[0][2], self._course_name)
+        self.assertEqual(ret[0][3], self._duration)
+
+        with self.assertRaises(RuntimeError):
+            self._db.show(invalid_table)
+
     def test_insert_course(self):
         """ Test for insert_course()
 
