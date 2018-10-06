@@ -1,8 +1,9 @@
 """ Unit test for Database module. """
 
-from os import path, remove
+from os import remove, rmdir
 import unittest
 import sqlite3
+from tempfile import mkstemp, mkdtemp
 from lib.database import Database
 
 class TestDatabase(unittest.TestCase):
@@ -11,10 +12,11 @@ class TestDatabase(unittest.TestCase):
     def setUpClass(cls):
         """ Prepare the test fixtures which is needed for this unittest. """
         # Prepare the fixtures
-        db_name = '.geekhours.db'
-        cls._db_path = path.join(path.dirname(__file__), db_name)
+        cls._db_path = mkdtemp()
+        cls._db_name = mkstemp(suffix='.db', dir=cls._db_path)
+        cls._db_name = str(cls._db_name[1])
         cls._db = Database()
-        cls._db.connect_db(cls._db_path)
+        cls._db.connect_db(cls._db_name)
         cls._db.create_table()
         cls._donelist = 'donelist'
         cls._course = 'course'
@@ -26,11 +28,12 @@ class TestDatabase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         """ Remove the database for this test after all the tests have run. """
-        remove(cls._db_path)
+        remove(cls._db_name)
+        rmdir(cls._db_path)
 
     def setUp(self):
         """ Connect database before calling each test function. """
-        self._db.connect_db(self._db_path)
+        self._db.connect_db(self._db_name)
 
     def tearDown(self):
         """ Delete records and close database after each test function is run. """
@@ -45,7 +48,7 @@ class TestDatabase(unittest.TestCase):
 
         Check that connect_db() is successful and None is returned.
         """
-        ret = self._db.connect_db(self._db_path)
+        ret = self._db.connect_db(self._db_name)
         self.assertIsNone(ret)
 
     def test_close_db(self):
@@ -53,7 +56,7 @@ class TestDatabase(unittest.TestCase):
         Test close_db() close the database.
         Verify it closes object-id of 'connenct()'.
         """
-        self._db.connect_db(self._db_path)
+        self._db.connect_db(self._db_name)
         self._db.close_db()
         connected_id = (hex(id(self._db.con)))
         closed_id = self._db.con.close
@@ -61,7 +64,7 @@ class TestDatabase(unittest.TestCase):
         self.assertIn(connected_id, closed_id)
 
         # Open database to make tearDown pass
-        self._db.connect_db(self._db_path)
+        self._db.connect_db(self._db_name)
 
     def test_create_table(self):
         """
