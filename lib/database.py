@@ -1,7 +1,6 @@
 """ Database.py is a moule to comunicate with a database. """
 
 import sqlite3
-import sys
 from typing import List
 
 __all__ = ['Database']
