@@ -41,10 +41,12 @@ class TestDatabase(unittest.TestCase):
         self._db.close_db()
 
     def test_connect_db(self):
-        """ Test connect_db connects the database. """
-        cls_name = self._db.con.__class__
-        check_cls_name = "<class 'sqlite3.Connection'>"
-        self.assertEqual(str(cls_name), check_cls_name)
+        """ Test for connect_db()
+
+        Check that connect_db() is successful and None is returned.
+        """
+        ret = self._db.connect_db(self._db_path)
+        self.assertIsNone(ret)
 
     def test_close_db(self):
         """
