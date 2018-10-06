@@ -48,8 +48,10 @@ class Database:
         """  Show table """
         if table is self.course:
             ret = self.cur.execute('SELECT * FROM course').fetchall()
+            print(ret)
         elif table is self.donelist:
             ret = self.cur.execute('SELECT * FROM donelist').fetchall()
+            print(ret)
         else:
             print("No such table '{}'.".format(table))
         return ret
