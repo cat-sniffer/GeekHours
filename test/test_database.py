@@ -20,6 +20,7 @@ class TestDatabase(unittest.TestCase):
         cls._db = Database()
         cls._db.connect_db(cls._db_name)
         cls._db.create_table()
+        cls._db.close_db()
         cls._donelist = 'donelist'
         cls._course = 'course'
         cls._course_name = 'python'
