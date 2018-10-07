@@ -10,8 +10,10 @@ class TestDatabase(unittest.TestCase):
     """ Test cases of the unit test for Database class """
     @classmethod
     def setUpClass(cls):
-        """ Prepare the test fixtures which is needed for this unittest. """
-        # Prepare the fixtures
+        """ Prepare the test fixtures
+
+        setUpClass() is the first method to be called.
+        """
         cls._db_path = mkdtemp()
         cls._db_name = mkstemp(suffix='.db', dir=cls._db_path)
         cls._db_name = str(cls._db_name[1])
@@ -27,16 +29,25 @@ class TestDatabase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """ Remove the database for this test after all the tests have run. """
+        """ Remove database and directory
+
+        tearDownClass() is called after all the tests have run.
+        """
         remove(cls._db_name)
         rmdir(cls._db_path)
 
     def setUp(self):
-        """ Connect database before calling each test function. """
+        """ Connect database
+
+        setUp() is called before calling each test function.
+        """
         self._db.connect_db(self._db_name)
 
     def tearDown(self):
-        """ Delete records and close database after each test function is run. """
+        """ Delete records and close database
+
+        tearDown() is called after each test function is run.
+        """
         self._db.cur.execute('DELETE FROM donelist')
         self._db.con.commit()
         self._db.cur.execute('DELETE FROM course')
@@ -52,9 +63,9 @@ class TestDatabase(unittest.TestCase):
         self.assertIsNone(ret)
 
     def test_close_db(self):
-        """
-        Test close_db() close the database.
-        Verify it closes object-id of 'connenct()'.
+        """ Test for close_db()
+
+        Check that the object-id of qlite3.onnenct() is closed.
         """
         self._db.connect_db(self._db_name)
         self._db.close_db()
@@ -67,9 +78,9 @@ class TestDatabase(unittest.TestCase):
         self._db.connect_db(self._db_name)
 
     def test_create_table(self):
-        """
-        Test create_table() creates a table.
-        Verify that the table schema and the table schema created by SetUpClass() are equal.
+        """ Test for create_table()
+
+        Check that the created table is the expected one.
         """
         # Prepare the table schemas
         expected_donelist = ("CREATE TABLE donelist ("
