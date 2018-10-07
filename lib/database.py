@@ -39,10 +39,13 @@ class Database:
         course = ("CREATE TABLE course ("
                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                   "name TEXT NOT NULL UNIQUE)")
-
-        self.cur.execute(donelist)
-        self.cur.execute(course)
-        self.con.commit()
+        try:
+            with self.con:
+                self.cur.execute(donelist)
+                self.cur.execute(course)
+        except (sqlite3.OperationalError) as error:
+            print(error)
+            raise
 
     def show(self, table):
         """  Show table """
