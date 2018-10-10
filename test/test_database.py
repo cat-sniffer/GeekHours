@@ -60,8 +60,7 @@ class TestDatabase(unittest.TestCase):
 
         Check that connect_db() is successful and None is returned.
         """
-        ret = self._db.connect_db(self._db_name)
-        self.assertIsNone(ret)
+        self.assertIsNone(self._db.connect_db(self._db_name))
 
     def test_close_db(self):
         """ Test for close_db()
@@ -149,8 +148,7 @@ class TestDatabase(unittest.TestCase):
         * when SQL statement fails, exception will be returned.
         """
         courses = [('python'), ('python')]
-        ret = self._db.insert_course(self._courses)
-        self.assertIsNone(ret)
+        self.assertIsNone(self._db.insert_course(self._courses))
 
         with self.assertRaises(sqlite3.IntegrityError):
             self._db.insert_course(courses)
@@ -163,8 +161,7 @@ class TestDatabase(unittest.TestCase):
         * Exception is returned when SQL statement fails.
         """
         self._db.insert_course(self._courses)
-        ret = self._db.insert_donelist(self._date, self._course_name, self._duration)
-        self.assertIsNone(ret)
+        self.assertIsNone(self._db.insert_donelist(self._date, self._course_name, self._duration))
 
         course_name = 'japanese'
         with self.assertRaises(RuntimeError):
@@ -181,8 +178,7 @@ class TestDatabase(unittest.TestCase):
         * Exception is returned when SQL statement fails.
         """
         self._db.insert_course(self._courses)
-        ret = self._db.remove_course(self._course_name)
-        self.assertIsNone(ret)
+        self.assertIsNone(self._db.remove_course(self._course_name))
 
         with self.assertRaises(RuntimeError):
             self._db.remove_course(self._course_name)
@@ -196,8 +192,7 @@ class TestDatabase(unittest.TestCase):
         """
         self._db.insert_course(self._courses)
         self._db.insert_donelist(self._date, self._course_name, self._duration)
-        ret = self._db.remove_donelist(self._date, self._course_name)
-        self.assertIsNone(ret)
+        self.assertIsNone(self._db.remove_donelist(self._date, self._course_name))
 
         with self.assertRaises(RuntimeError):
             self._db.remove_donelist(self._date, self._course_name)
