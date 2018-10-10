@@ -1,3 +1,7 @@
 [style]
 # The column limit.
 column_limit=100
+
+# Insert a space between the ending comma and closing bracket of a list,
+# etc.
+space_between_ending_comma_and_closing_bracket=False
