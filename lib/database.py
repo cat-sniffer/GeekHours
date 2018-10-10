@@ -69,7 +69,6 @@ class Database:
             with self.con:
                 self.con.execute('INSERT INTO course(name) VALUES (?)', (elem,))
                 print("Add '{}' in course.".format(elem))
-        return None
 
     def insert_donelist(self, date: str, course: str, duration: str):
         """ Insert donelist.
@@ -92,7 +91,6 @@ class Database:
             self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)',
                              (date, course, duration,))
             print("Add '{} {} {}' in donelist.".format(date, course, duration))
-        return None
 
     def remove_course(self, course: str):
         """ Remove course name from 'course' table. """
@@ -105,8 +103,6 @@ class Database:
         with self.con:
             self.cur.execute('DELETE FROM course WHERE name=?', (course,))
             print("Removed '{}' from course.".format(course))
-
-        return None
 
     def remove_donelist(self, date: str, course: str):
         """ Remove record from 'donelist' table.
@@ -124,5 +120,3 @@ class Database:
             self.cur.execute('DELETE FROM donelist WHERE date=? AND course=?',
                              (date, course,))
             print('Removed record.')
-
-        return None
