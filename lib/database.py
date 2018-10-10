@@ -94,44 +94,6 @@ class Database:
             print("Add '{} {} {}' in donelist.".format(date, course, duration))
         return None
 
-    def update_course(self, old_course: str, new_course: str):
-        """ Update course name of 'course' table.
-
-        Replace old_course by new_course.
-        """
-        ret = self.con.execute('SELECT name FROM course WHERE name=?', (old_course,))
-        check = ret.fetchall()
-
-        if not check:
-            raise RuntimeError("No such course in 'course' table.")
-
-        with self.con:
-            self.cur.execute('UPDATE course SET name=? WHERE name=?', (new_course, old_course,))
-            print("Updated '{}' by '{}'".format(old_course, new_course))
-
-        return None
-
-    def update_donelist(self, old_date, old_course: str, new_date: str, new_course: str, new_duration: str):
-        """ Update record of 'donelist' table.
-
-        Search record by date and course name, and if found matched record replace the record by
-        new record.
-        """
-        ret = self.con.execute('SELECT date, course FROM donelist WHERE date=? AND course=?',
-                               (old_date, old_course,))
-        check = ret.fetchall()
-
-        if not check:
-            raise RuntimeError("No such record in 'donelist' table.")
-
-        with self.con:
-            self.cur.execute('UPDATE donelist SET date=?, course=?, duration=?\
-                             WHERE date=? AND course=?',
-                             (new_date, new_course, new_duration, old_date, old_course,))
-            print('Updated record.')
-
-        return None
-
     def remove_course(self, course: str):
         """ Remove course name from 'course' table. """
         ret = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
