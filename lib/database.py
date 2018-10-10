@@ -77,12 +77,12 @@ class Database:
         Insert donelist into the 'donelist' table.
         The course name must be a registered name in the 'course' table.
         """
-        ret = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
-        check = ret.fetchall()
+        check_course_name = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
+        check_course_name = check_course_name.fetchall()
         check_duplicate = self.con.execute('SELECT date course FROM donelist WHERE date=? AND course=?', (date, course,))
         check_duplicate = check_duplicate.fetchall()
 
-        if not check:
+        if not check_course_name:
             raise RuntimeError("No such course in 'course' table.")
 
         if check_duplicate:
