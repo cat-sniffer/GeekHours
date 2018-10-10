@@ -79,9 +79,14 @@ class Database:
         """
         ret = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
         check = ret.fetchall()
+        check_duplicate = self.con.execute('SELECT date course FROM donelist WHERE date=? AND course=?', (date, course,))
+        check_duplicate = check_duplicate.fetchall()
 
         if not check:
             raise RuntimeError("No such course in 'course' table.")
+
+        if check_duplicate:
+            raise RuntimeError("Record already exists in 'donelist' table.")
 
         with self.con:
             self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)',
