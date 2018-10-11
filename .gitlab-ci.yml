@@ -19,7 +19,7 @@ pylint:
 pycodestyle:
     stage: check
     script:
-        - pycodestyle $TEST_FILE
+        - pycodestyle --max-line-length=99 $TEST_FILE
 
 yapf:
     stage: check

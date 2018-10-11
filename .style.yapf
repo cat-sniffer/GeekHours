@@ -1,6 +1,6 @@
 [style]
 # The column limit.
-column_limit=100
+column_limit=99
 
 # Insert a space between the ending comma and closing bracket of a list,
 # etc.
