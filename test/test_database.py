@@ -95,14 +95,14 @@ class TestDatabase(unittest.TestCase):
                            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                            "name TEXT NOT NULL UNIQUE)")
 
-        ##### donelist
+        # donelist
         donelist = self._db.cur.execute("SELECT sql from sqlite_master \
                                              WHERE type = 'table' AND name = 'donelist'")
         # Cast string to tuple to assertEqual() table schemas
         expected_donelist = tuple([expected_donelist])
         self.assertEqual(donelist.fetchone(), expected_donelist)
 
-        ##### course
+        # course
         course = self._db.cur.execute("SELECT sql from sqlite_master \
                                            WHERE type = 'table' AND name = 'course'")
         expected_course = tuple([expected_course])
@@ -120,7 +120,7 @@ class TestDatabase(unittest.TestCase):
         """
         invalid_table = 'test'
 
-        ##### course
+        # course
         self._db.insert_course(self._courses)
         ret = self._db.show(self._course)
         i = 0
@@ -132,7 +132,7 @@ class TestDatabase(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             self._db.show(invalid_table)
 
-        ###### donelist
+        # donelist
         self._db.insert_donelist(self._date, self._course_name, self._duration)
         ret = self._db.show(self._donelist)
         self.assertEqual(ret[0][1], self._date)
