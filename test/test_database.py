@@ -6,8 +6,10 @@ import sqlite3
 from tempfile import mkstemp, mkdtemp
 from lib.database import Database
 
+
 class TestDatabase(unittest.TestCase):
     """ Test cases of the unit test for Database class """
+
     @classmethod
     def setUpClass(cls):
         """ Prepare the test fixtures

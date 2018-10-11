@@ -1,12 +1,14 @@
 """ Database.py is a moule to comunicate with a database. """
 
+__all__ = ['Database']
+
 import sqlite3
 from typing import List
 
-__all__ = ['Database']
 
 class Database:
     """ Database class initializes and manipulates SQLite3 database. """
+
     def __init__(self):
         self.con = None
         self.cur = None
@@ -78,7 +80,11 @@ class Database:
         """
         check_course_name = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
         check_course_name = check_course_name.fetchall()
-        check_duplicate = self.con.execute('SELECT date course FROM donelist WHERE date=? AND course=?', (date, course,))
+        check_duplicate = self.con.execute(
+            'SELECT date course FROM donelist WHERE date=? AND course=?', (
+                date,
+                course,
+            ))
         check_duplicate = check_duplicate.fetchall()
 
         if not check_course_name:
@@ -88,8 +94,11 @@ class Database:
             raise RuntimeError("Record already exists in 'donelist' table.")
 
         with self.con:
-            self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)',
-                             (date, course, duration,))
+            self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)', (
+                date,
+                course,
+                duration,
+            ))
             print("Add '{} {} {}' in donelist.".format(date, course, duration))
 
     def remove_course(self, course: str):
@@ -109,14 +118,18 @@ class Database:
 
         Search record by date and course name and if found matched record, it will be removed.
         """
-        ret = self.con.execute('SELECT date, course FROM donelist WHERE date=? AND course=?',
-                               (date, course,))
+        ret = self.con.execute('SELECT date, course FROM donelist WHERE date=? AND course=?', (
+            date,
+            course,
+        ))
         check = ret.fetchall()
 
         if not check:
             raise RuntimeError("No such record in 'donelist' table.")
 
         with self.con:
-            self.cur.execute('DELETE FROM donelist WHERE date=? AND course=?',
-                             (date, course,))
+            self.cur.execute('DELETE FROM donelist WHERE date=? AND course=?', (
+                date,
+                course,
+            ))
             print('Removed record.')
