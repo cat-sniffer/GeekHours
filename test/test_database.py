@@ -108,7 +108,7 @@ class TestDatabase(unittest.TestCase):
         expected_course = tuple([expected_course])
         self.assertEqual(course.fetchone(), expected_course)
 
-        with self.assertRaises((sqlite3.OperationalError)):
+        with self.assertRaises(sqlite3.OperationalError):
             self._db.create_table()
 
     def test_show(self):
