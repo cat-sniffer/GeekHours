@@ -1,4 +1,4 @@
-""" Database.py is a moule to comunicate with a database. """
+""" Database.py is a module to communicate with a database. """
 
 __all__ = ['Database']
 

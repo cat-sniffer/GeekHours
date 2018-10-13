@@ -67,7 +67,7 @@ class TestDatabase(unittest.TestCase):
     def test_close_db(self):
         """ Test for close_db()
 
-        Check that the object-id of qlite3.onnenct() is closed.
+        Check that the object-id of qlite3.connect() is closed.
         """
         self._db.connect_db(self._db_name)
         self._db.close_db()
