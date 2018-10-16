@@ -32,22 +32,19 @@ class Database:
         donelist: Table for registration of date, course name and duration you studied.
         course: Table for validation of course name.
         """
-        donelist = ("CREATE TABLE donelist ("
+        donelist = ("CREATE TABLE IF NOT EXISTS donelist ("
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     "date TEXT NOT NULL, "
                     "course TEXT NOT NULL, "
                     "duration TEXT NOT NULL)")
 
-        course = ("CREATE TABLE course ("
+        course = ("CREATE TABLE IF NOT EXISTS course ("
                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                   "name TEXT NOT NULL UNIQUE)")
-        try:
-            with self.con:
-                self.cur.execute(donelist)
-                self.cur.execute(course)
-        except (sqlite3.OperationalError) as error:
-            print(error)
-            raise
+
+        with self.con:
+            self.cur.execute(donelist)
+            self.cur.execute(course)
 
     def show(self, table):
         """  Show table """
