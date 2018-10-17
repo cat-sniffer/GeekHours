@@ -1,3 +1,6 @@
-""" Constructor of Database module """
+""" Constructor of modules """
 
-__all__ = ['database']
+__all__ = [
+    'database',
+    'command',
+]
