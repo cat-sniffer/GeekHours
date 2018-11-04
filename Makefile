@@ -3,6 +3,7 @@ PTH_PATH = /usr/lib/python3.5/dist-packages
 PYTHON_FILES = $(shell find . -type f -name "*.py")
 CURRENT_DIR = $(CURDIR)
 
+# Execute as root
 install:
 	mkdir -p $(PTH_PATH)
 	echo $(CURRENT_DIR)/lib > $(PTH_PATH)/$(PTH_FILE)
