@@ -46,12 +46,12 @@ class Database:
             self.cur.execute(donelist)
             self.cur.execute(course)
 
-    def show(self, table):
+    def show(self, table: str):
         """  Show table """
-        if table is self.course:
+        if table == self.course:
             ret = self.cur.execute('SELECT * FROM course').fetchall()
             print(ret)
-        elif table is self.donelist:
+        elif table == self.donelist:
             ret = self.cur.execute('SELECT * FROM donelist').fetchall()
             print(ret)
         else:
