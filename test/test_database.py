@@ -1,10 +1,9 @@
 """ Unit test for Database module. """
 
-from os import remove, rmdir
 import unittest
 import sqlite3
-from tempfile import mkstemp, mkdtemp
 from lib.database import Database
+from util import create_db, remove_db
 
 
 class TestDatabase(unittest.TestCase):
@@ -16,9 +15,7 @@ class TestDatabase(unittest.TestCase):
 
         setUpClass() is the first method to be called.
         """
-        cls._db_path = mkdtemp()
-        cls._db_name = mkstemp(suffix='.db', dir=cls._db_path)
-        cls._db_name = str(cls._db_name[1])
+        cls._db_path, cls._db_name = create_db()
         cls._db = Database()
         cls._db.connect_db(cls._db_name)
         cls._db.create_table()
@@ -36,8 +33,7 @@ class TestDatabase(unittest.TestCase):
 
         tearDownClass() is called after all the tests have run.
         """
-        remove(cls._db_name)
-        rmdir(cls._db_path)
+        remove_db(cls._db_path, cls._db_name)
 
     def setUp(self):
         """ Connect database

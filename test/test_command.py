@@ -1,9 +1,8 @@
 """ Unit test for Command module. """
 
 import unittest
-from os import remove, rmdir
-from tempfile import mkstemp, mkdtemp
 from command import Command
+from util import create_db, remove_db
 
 
 class TestCommand(unittest.TestCase):
@@ -15,9 +14,7 @@ class TestCommand(unittest.TestCase):
 
         Create temporary database and test directory first.
         """
-        cls._db_path = mkdtemp()
-        cls._db_name = mkstemp(suffix='.db', dir=cls._db_path)
-        cls._db_name = str(cls._db_name[1])
+        cls._db_path, cls._db_name = create_db()
         cls._command = Command(cls._db_name)
         cls._course_name_python = 'python'
         cls._course_name_math = 'math'
@@ -33,8 +30,7 @@ class TestCommand(unittest.TestCase):
 
         Remove database and directory after all the tests have run.
         """
-        remove(cls._db_name)
-        rmdir(cls._db_path)
+        remove_db(cls._db_path, cls._db_name)
 
     def setUp(self):
         """ Prepare the fields
