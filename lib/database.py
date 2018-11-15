@@ -1,7 +1,5 @@
 """ database.py is a module to communicate with a database. """
 
-__all__ = ['Database']
-
 import sqlite3
 from typing import List
 
