@@ -1,8 +1,8 @@
 """ Unit test for Command module. """
 
 import unittest
-from command import Command
-from util import create_db, remove_db
+from lib.command import Command
+from lib.util import create_db, remove_db
 
 
 class TestCommand(unittest.TestCase):

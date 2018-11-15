@@ -3,7 +3,7 @@
 import unittest
 import sqlite3
 from lib.database import Database
-from util import create_db, remove_db
+from lib.util import create_db, remove_db
 
 
 class TestDatabase(unittest.TestCase):
