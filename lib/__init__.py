@@ -3,4 +3,5 @@
 __all__ = [
     'database',
     'command',
+    'util',
 ]
