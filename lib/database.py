@@ -7,16 +7,11 @@ from typing import List
 class Database:
     """ Database class initializes and manipulates SQLite3 database. """
 
-    def __init__(self):
-        self.con = None
-        self.cur = None
-        self.donelist = 'donelist'
-        self.course = 'course'
-
-    def connect_db(self, db_name):
-        """ Connect to the database """
+    def __init__(self, db_name):
         self.con = sqlite3.connect(db_name)
         self.cur = self.con.cursor()
+        self.donelist = 'donelist'
+        self.course = 'course'
 
     def close_db(self):
         """ Close the database """
