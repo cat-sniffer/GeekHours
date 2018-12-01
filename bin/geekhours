@@ -20,55 +20,61 @@ def initialize():
 
 
 # Handlers for course_subparser
-def list_course(args: str):
+def list_course(args: str, db_path: str):
     """ Command-line
 
     geekhours course list [--list-name LIST_NAME]
     """
-    command.get_show(args.list_name)
+    cmd = Command(db_path)
+    cmd.get_show(args.list_name)
 
 
-def add_course(args: List[str]):
+def add_course(args: List[str], db_path: str):
     """ Command-line
 
     geekhours course add course_name [course_name ...]
     """
-    command.get_insert_course(args.course_name)
+    cmd = Command(db_path)
+    cmd.get_insert_course(args.course_name)
 
 
-def remove_course(args: str):
+def remove_course(args: str, db_path: str):
     """ Command-line
 
     geekhours course rm course_name
     """
-    command.get_remove_course(args.course_name)
+    cmd = Command(db_path)
+    cmd.get_remove_course(args.course_name)
 
 
 # Handlers for done_subparser
-def list_done(args: str):
+def list_done(args: str, db_path: str):
     """ Command-line
 
     geekhours done list [--list-name LIST_NAME]
     """
-    command.get_show(args.list_name)
+    cmd = Command(db_path)
+    cmd.get_show(args.list_name)
 
 
-def add_done(args: str):
+def add_done(args: str, db_path: str):
     """ Command-line
 
     geekhours done [--date [DATE]] [--duration [DURATION]] course_name
     """
-    command.get_insert_donelist(args.date, args.course_name, args.duration)
+    cmd = Command(db_path)
+    cmd.get_insert_donelist(args.date, args.course_name, args.duration)
 
 
-def remove_done(args: str):
+def remove_done(args: str, db_path: str):
     """ Command-line
 
     geekhours done rm date course_name
     """
     args.date = str(args.date)
     args.course_name = str(args.course_name)
-    command.get_remove_donelist(args.date, args.course_name)
+    cmd = Command(db_path)
+    cmd.get_remove_donelist(args.date, args.course_name)
 
 
 def get_args(date_today: str):
@@ -147,15 +153,14 @@ def get_args(date_today: str):
 
 def main():
     """ main """
-    args = get_args(today)
+    db_path, date_today = initialize()
+    args = get_args(date_today)
     if hasattr(args, 'handler'):
-        args.handler(args)
+        args.handler(args, db_path)
     else:
         parser = argparse.ArgumentParser()
         parser.print_help()
 
 
 if __name__ == '__main__':
-    database, today = initialize()
-    command = Command(database)
     main()
