@@ -10,8 +10,7 @@ class Command:
     """ Command class provides command-line interface to manipulate the database. """
 
     def __init__(self, db_name: str):
-        self.database = Database()
-        self.database.connect_db(db_name)
+        self.database = Database(db_name)
         self.database.create_table()
 
     def get_show(self, arg: str):
