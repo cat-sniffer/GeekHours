@@ -1,9 +1,8 @@
 """ geekhours command """
-
 #!/usr/bin/env python3
 
 import argparse
-from os import path
+from os import path, getenv
 from typing import List
 from datetime import date
 from command import Command
@@ -11,12 +10,10 @@ from command import Command
 
 def initialize():
     """ Initialize database. """
-    home_dir = path.expanduser('~')
     db_name = '.geekhours.db'
-    db_path = path.join(home_dir, db_name)
-    date_today = date.today()
-    date_today = date_today.strftime('%Y%m%d')
-    return db_path, date_today
+    db_path = path.join(getenv('HOME'), db_name)
+    today = date.today().strftime('%Y%m%d')
+    return db_path, today
 
 
 # Handlers for course_subparser
@@ -77,7 +74,7 @@ def remove_done(args: str, db_path: str):
     cmd.get_remove_donelist(args.date, args.course_name)
 
 
-def get_args(date_today: str):
+def get_args(today: str):
     """ Parsers for 'corse' and 'done' sub-commands """
     parser = argparse.ArgumentParser(
         description=
@@ -124,7 +121,7 @@ def get_args(date_today: str):
     done_add_parser.add_argument(
         '--date',
         nargs='?',
-        default=date_today,
+        default=today,
         help='The day you studied. Today (yyyymmdd) is default.')
     done_add_parser.add_argument('course_name', help='Course name you studied.')
     done_add_parser.add_argument(
@@ -153,8 +150,8 @@ def get_args(date_today: str):
 
 def main():
     """ main """
-    db_path, date_today = initialize()
-    args = get_args(date_today)
+    db_path, today = initialize()
+    args = get_args(today)
     if hasattr(args, 'handler'):
         args.handler(args, db_path)
     else:
