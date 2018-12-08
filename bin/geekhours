@@ -1,5 +1,5 @@
-""" geekhours command """
 #!/usr/bin/env python3
+""" geekhours command """
 
 import argparse
 from os import path, getenv
