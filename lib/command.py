@@ -13,22 +13,22 @@ class Command:
         self.database = Database(db_name)
         self.database.create_table()
 
-    def get_show(self, arg: str):
+    def show(self, arg: str):
         """ Call database.show() """
         self.database.show(arg)
 
-    def get_insert_course(self, arg: List[str]):
+    def insert_course(self, arg: List[str]):
         """ Call database.insert_course() """
         self.database.insert_course(arg)
 
-    def get_insert_donelist(self, date: str, course: str, duration: str):
+    def insert_donelist(self, date: str, course: str, duration: str):
         """ Call database.insert_donelist() """
         self.database.insert_donelist(date, course, duration)
 
-    def get_remove_course(self, arg: str):
+    def remove_course(self, arg: str):
         """ Call database.remove_course() """
         self.database.remove_course(arg)
 
-    def get_remove_donelist(self, date: str, course: str):
+    def remove_donelist(self, date: str, course: str):
         """ Call database.remove_donelist() """
         self.database.remove_donelist(date, course)

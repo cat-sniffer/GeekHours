@@ -18,113 +18,101 @@ def initialize():
 
 # Handlers for course_subparser
 def list_course(args: str, db_path: str):
-    """ Command-line
-
-    geekhours course list [--list-name LIST_NAME]
-    """
+    """ geekhours course list """
     cmd = Command(db_path)
-    cmd.get_show(args.list_name)
+    cmd.show(args.course)
 
 
 def add_course(args: List[str], db_path: str):
-    """ Command-line
-
-    geekhours course add course_name [course_name ...]
-    """
+    """ geekhours course add """
     cmd = Command(db_path)
-    cmd.get_insert_course(args.course_name)
+    cmd.insert_course(args.course_name)
 
 
 def remove_course(args: str, db_path: str):
-    """ Command-line
-
-    geekhours course rm course_name
-    """
+    """ geekhours course rm """
     cmd = Command(db_path)
-    cmd.get_remove_course(args.course_name)
+    cmd.remove_course(args.course_name)
 
 
 # Handlers for done_subparser
 def list_done(args: str, db_path: str):
-    """ Command-line
-
-    geekhours done list [--list-name LIST_NAME]
-    """
+    """ geekhours done list """
     cmd = Command(db_path)
-    cmd.get_show(args.list_name)
+    cmd.show(args.done)
 
 
 def add_done(args: str, db_path: str):
-    """ Command-line
-
-    geekhours done [--date [DATE]] [--duration [DURATION]] course_name
-    """
+    """  geekhours done add """
     cmd = Command(db_path)
-    cmd.get_insert_donelist(args.date, args.course_name, args.duration)
+    cmd.insert_donelist(args.date, args.course_name, args.duration)
 
 
 def remove_done(args: str, db_path: str):
-    """ Command-line
-
-    geekhours done rm date course_name
-    """
+    """ geekhours done rm """
     args.date = str(args.date)
     args.course_name = str(args.course_name)
     cmd = Command(db_path)
-    cmd.get_remove_donelist(args.date, args.course_name)
+    cmd.remove_donelist(args.date, args.course_name)
 
 
 def get_args(today: str):
     """ Parsers for 'corse' and 'done' sub-commands """
     parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description='Geekhours is a management tool for the study time.')
+
+    subparsers = parser.add_subparsers(
+        title='Synopsis',
         description=
-        'geekhours is a management tool for your study time. Create a course-list and register \
-        your study time into the done-list.')
-    subparsers = parser.add_subparsers()
+        'geekhours course list\n'
+        'geekhours course add course_name [course_name ...]\n'
+        'geekhours course rm course_name\n'
+        'geekhours done list\n'
+        'geekhours done add [--date [date]] [--duration [duration]] course_name\n'
+        'geekhours done rm date course_name',
+        help="Sub commands.")
+
+    subparsers.required = True
 
     # course command
-    course_parser = subparsers.add_parser(
-        'course',
-        help='Manipulate the course-list. This is used for course name registration in done-list.')
+    course_parser = subparsers.add_parser('course', help='Manipulate course.')
 
     # course's sub-command
     course_subparser = course_parser.add_subparsers()
 
     # course add
-    add_parser = course_subparser.add_parser('add', help='Add [course_name] into the course-list.')
-    add_parser.add_argument(
-        'course_name', nargs='+', help='Course name(s) to use into the done-list.')
+    add_parser = course_subparser.add_parser('add', help='Add course_name.')
+    add_parser.add_argument('course_name', nargs='+', help='Course name(s) to add.')
     add_parser.set_defaults(handler=add_course)
 
     # course rm
-    rm_parser = course_subparser.add_parser(
-        'rm', help='Remove [course_name] from the course-list.')
-    rm_parser.add_argument(
-        'course_name', help='Course name you want to remove from the course-list.')
+    rm_parser = course_subparser.add_parser('rm', help='Remove course.')
+    rm_parser.add_argument('course_name', help='Course name to remove.')
     rm_parser.set_defaults(handler=remove_course)
 
     # course list
-    list_parser = course_subparser.add_parser('list', help='List the course-list.')
-    list_parser.add_argument('--list-name', default='course', help="'course' is default.")
-    list_parser.set_defaults(handler=list_course)
+    list_parser = course_subparser.add_parser('list', help='List the courses.')
+    list_parser.set_defaults(course='course', handler=list_course)
 
     # done commnad
-    done_parser = subparsers.add_parser(
-        'done', help='Manipulate the done-list which is used to register the study time.')
+    done_parser = subparsers.add_parser('done', help='Manipulate done.')
 
     # done's sub-command
     done_subparser = done_parser.add_subparsers()
 
     # done add
     done_add_parser = done_subparser.add_parser(
-        'add', help="Register your study time with date, course name, and duration.")
+        'add', help="Add the study time with date, course, and duration.")
     done_add_parser.add_argument(
+        '-d',
         '--date',
         nargs='?',
         default=today,
         help='The day you studied. Today (yyyymmdd) is default.')
     done_add_parser.add_argument('course_name', help='Course name you studied.')
     done_add_parser.add_argument(
+        '-D',
         '--duration',
         nargs='?',
         default='1',
@@ -133,16 +121,14 @@ def get_args(today: str):
     done_add_parser.set_defaults(handler=add_done)
 
     # done rm
-    done_rm_parser = done_subparser.add_parser(
-        'rm', help="Remove a record matching 'date' and 'coure name' from the done-list.")
+    done_rm_parser = done_subparser.add_parser('rm', help="Remove done matching date and course.")
     done_rm_parser.add_argument('date', help='Study date to remove.')
     done_rm_parser.add_argument('course_name', help='Course name to remove.')
     done_rm_parser.set_defaults(handler=remove_done)
 
     # done list
-    done_list_parser = done_subparser.add_parser('list', help='List the done-list.')
-    done_list_parser.add_argument('--list-name', default='donelist', help="'donelist' is default.")
-    done_list_parser.set_defaults(handler=list_done)
+    done_list_parser = done_subparser.add_parser('list', help='List done.')
+    done_list_parser.set_defaults(done='donelist', handler=list_done)
 
     args = parser.parse_args()
     return args
