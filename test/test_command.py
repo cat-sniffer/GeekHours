@@ -58,7 +58,7 @@ class TestCommand(unittest.TestCase):
         self.assertIsNone(self._command.get_show('course'))
         self.assertIsNone(self._command.get_show('donelist'))
 
-    def test_get_isert_course(self):
+    def test_get_insert_course(self):
         """ Test for get_insert_course()
 
         Assert get_insert_course() calls the Database.insert_course().
