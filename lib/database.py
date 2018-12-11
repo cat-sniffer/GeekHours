@@ -43,10 +43,8 @@ class Database:
         """  Show table """
         if table == self.course:
             ret = self.cur.execute('SELECT * FROM course').fetchall()
-            print(ret)
         elif table == self.donelist:
             ret = self.cur.execute('SELECT * FROM donelist').fetchall()
-            print(ret)
         else:
             raise RuntimeError("No such table.")
         return ret
