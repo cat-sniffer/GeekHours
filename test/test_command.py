@@ -1,5 +1,6 @@
 """ Unit test for Command module. """
 
+import sqlite3
 import unittest
 from lib.command import Command
 from lib.util import create_db, remove_db
@@ -58,6 +59,10 @@ class TestCommand(unittest.TestCase):
         self.assertIsNone(self._command.show('course'))
         self.assertIsNone(self._command.show('donelist'))
 
+        wrong_name = None
+        with self.assertRaises(RuntimeError):
+            self._command.show(wrong_name)
+
     def test_insert_course(self):
         """ Test for insert_course()
 
@@ -68,6 +73,10 @@ class TestCommand(unittest.TestCase):
         self._command.remove_course(self._course_name_eng)
         self.assertIsNone(self._command.insert_course(self._courses))
 
+        wrong_course = [None]
+        with self.assertRaises(sqlite3.IntegrityError):
+            self._command.insert_course(wrong_course)
+
     def test_insert_donelist(self):
         """ Test for insert_donelist()
 
@@ -77,6 +86,9 @@ class TestCommand(unittest.TestCase):
         self.assertIsNone(
             self._command.insert_donelist(self._date, self._course_name_python,
                                               self._duration))
+        wrong_duration = None
+        with self.assertRaises(sqlite3.IntegrityError):
+            self._command.insert_donelist('20181212', self._course_name_python, wrong_duration)
 
     def test_remove_course(self):
         """ Test for insert_course()
@@ -87,6 +99,10 @@ class TestCommand(unittest.TestCase):
         self.assertIsNone(self._command.remove_course(self._course_name_math))
         self.assertIsNone(self._command.remove_course(self._course_name_eng))
 
+        wrong_course = 'music'
+        with self.assertRaises(RuntimeError):
+            self._command.remove_course(wrong_course)
+
         # Insertion for tearDown()
         self._command.insert_course(self._courses)
 
@@ -96,6 +112,10 @@ class TestCommand(unittest.TestCase):
         Assert remove_donelist() calls the Database.remove_donelist().
         """
         self.assertIsNone(self._command.remove_donelist(self._date, self._course_name_python))
+
+        wrong_date = '00000000'
+        with self.assertRaises(RuntimeError):
+            self._command.remove_donelist(wrong_date, self._course_name_python)
 
         # Insertion for tearDown()
         self._command.insert_donelist(self._date, self._course_name_python, self._duration)
