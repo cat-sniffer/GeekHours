@@ -84,8 +84,7 @@ class TestCommand(unittest.TestCase):
         """
         self._command.remove_donelist(self._date, self._course_name_python)
         self.assertIsNone(
-            self._command.insert_donelist(self._date, self._course_name_python,
-                                              self._duration))
+            self._command.insert_donelist(self._date, self._course_name_python, self._duration))
         wrong_duration = None
         with self.assertRaises(sqlite3.IntegrityError):
             self._command.insert_donelist('20181212', self._course_name_python, wrong_duration)
