@@ -37,65 +37,65 @@ class TestCommand(unittest.TestCase):
 
         Put values into the fields before calling each test function.
         """
-        self._command.get_insert_course(self._courses)
-        self._command.get_insert_donelist(self._date, self._course_name_python, self._duration)
+        self._command.insert_course(self._courses)
+        self._command.insert_donelist(self._date, self._course_name_python, self._duration)
 
     def tearDown(self):
         """ Remove fields
 
         Remove values of the fields after each test function is run.
         """
-        self._command.get_remove_donelist(self._date, self._course_name_python)
-        self._command.get_remove_course(self._course_name_python)
-        self._command.get_remove_course(self._course_name_math)
-        self._command.get_remove_course(self._course_name_eng)
+        self._command.remove_donelist(self._date, self._course_name_python)
+        self._command.remove_course(self._course_name_python)
+        self._command.remove_course(self._course_name_math)
+        self._command.remove_course(self._course_name_eng)
 
-    def test_get_show(self):
-        """ Test for get_show()
+    def test_show(self):
+        """ Test for show()
 
-        Assert get_show() calls the Database.show().
+        Assert show() calls the Database.show().
         """
-        self.assertIsNone(self._command.get_show('course'))
-        self.assertIsNone(self._command.get_show('donelist'))
+        self.assertIsNone(self._command.show('course'))
+        self.assertIsNone(self._command.show('donelist'))
 
-    def test_get_insert_course(self):
-        """ Test for get_insert_course()
+    def test_insert_course(self):
+        """ Test for insert_course()
 
-        Assert get_insert_course() calls the Database.insert_course().
+        Assert insert_course() calls the Database.insert_course().
         """
-        self._command.get_remove_course(self._course_name_python)
-        self._command.get_remove_course(self._course_name_math)
-        self._command.get_remove_course(self._course_name_eng)
-        self.assertIsNone(self._command.get_insert_course(self._courses))
+        self._command.remove_course(self._course_name_python)
+        self._command.remove_course(self._course_name_math)
+        self._command.remove_course(self._course_name_eng)
+        self.assertIsNone(self._command.insert_course(self._courses))
 
-    def test_get_insert_donelist(self):
-        """ Test for get_insert_donelist()
+    def test_insert_donelist(self):
+        """ Test for insert_donelist()
 
-        Assert get_insert_donelist() calls the Database.insert_donelist().
+        Assert insert_donelist() calls the Database.insert_donelist().
         """
-        self._command.get_remove_donelist(self._date, self._course_name_python)
+        self._command.remove_donelist(self._date, self._course_name_python)
         self.assertIsNone(
-            self._command.get_insert_donelist(self._date, self._course_name_python,
+            self._command.insert_donelist(self._date, self._course_name_python,
                                               self._duration))
 
-    def test_get_remove_course(self):
-        """ Test for get_insert_course()
+    def test_remove_course(self):
+        """ Test for insert_course()
 
-        Assert get_insert_course() calls the Database.remove_course().
+        Assert insert_course() calls the Database.remove_course().
         """
-        self.assertIsNone(self._command.get_remove_course(self._course_name_python))
-        self.assertIsNone(self._command.get_remove_course(self._course_name_math))
-        self.assertIsNone(self._command.get_remove_course(self._course_name_eng))
+        self.assertIsNone(self._command.remove_course(self._course_name_python))
+        self.assertIsNone(self._command.remove_course(self._course_name_math))
+        self.assertIsNone(self._command.remove_course(self._course_name_eng))
 
         # Insertion for tearDown()
-        self._command.get_insert_course(self._courses)
+        self._command.insert_course(self._courses)
 
-    def test_get_remove_donelist(self):
-        """ Test for get_remove_donelist()
+    def test_remove_donelist(self):
+        """ Test for remove_donelist()
 
-        Assert get_remove_donelist() calls the Database.remove_donelist().
+        Assert remove_donelist() calls the Database.remove_donelist().
         """
-        self.assertIsNone(self._command.get_remove_donelist(self._date, self._course_name_python))
+        self.assertIsNone(self._command.remove_donelist(self._date, self._course_name_python))
 
         # Insertion for tearDown()
-        self._command.get_insert_donelist(self._date, self._course_name_python, self._duration)
+        self._command.insert_donelist(self._date, self._course_name_python, self._duration)
