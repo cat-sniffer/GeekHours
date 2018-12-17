@@ -1,6 +1,4 @@
-""" Database.py is a module to communicate with a database. """
-
-__all__ = ['Database']
+""" database.py is a module to communicate with a database. """
 
 import sqlite3
 from typing import List
@@ -9,16 +7,11 @@ from typing import List
 class Database:
     """ Database class initializes and manipulates SQLite3 database. """
 
-    def __init__(self):
-        self.con = None
-        self.cur = None
-        self.donelist = 'donelist'
-        self.course = 'course'
-
-    def connect_db(self, db_name):
-        """ Connect to the database """
+    def __init__(self, db_name):
         self.con = sqlite3.connect(db_name)
         self.cur = self.con.cursor()
+        self.donelist = 'donelist'
+        self.course = 'course'
 
     def close_db(self):
         """ Close the database """
@@ -32,31 +25,26 @@ class Database:
         donelist: Table for registration of date, course name and duration you studied.
         course: Table for validation of course name.
         """
-        donelist = ("CREATE TABLE donelist ("
+        donelist = ("CREATE TABLE IF NOT EXISTS donelist ("
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     "date TEXT NOT NULL, "
                     "course TEXT NOT NULL, "
                     "duration TEXT NOT NULL)")
 
-        course = ("CREATE TABLE course ("
+        course = ("CREATE TABLE IF NOT EXISTS course ("
                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                   "name TEXT NOT NULL UNIQUE)")
-        try:
-            with self.con:
-                self.cur.execute(donelist)
-                self.cur.execute(course)
-        except (sqlite3.OperationalError) as error:
-            print(error)
-            raise
 
-    def show(self, table):
+        with self.con:
+            self.cur.execute(donelist)
+            self.cur.execute(course)
+
+    def show(self, table: str):
         """  Show table """
-        if table is self.course:
+        if table == self.course:
             ret = self.cur.execute('SELECT * FROM course').fetchall()
-            print(ret)
-        elif table is self.donelist:
+        elif table == self.donelist:
             ret = self.cur.execute('SELECT * FROM donelist').fetchall()
-            print(ret)
         else:
             raise RuntimeError("No such table.")
         return ret

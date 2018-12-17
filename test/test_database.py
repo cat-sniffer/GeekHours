@@ -1,10 +1,9 @@
 """ Unit test for Database module. """
 
-from os import remove, rmdir
 import unittest
 import sqlite3
-from tempfile import mkstemp, mkdtemp
 from lib.database import Database
+from lib.util import create_db, remove_db
 
 
 class TestDatabase(unittest.TestCase):
@@ -16,13 +15,10 @@ class TestDatabase(unittest.TestCase):
 
         setUpClass() is the first method to be called.
         """
-        cls._db_path = mkdtemp()
-        cls._db_name = mkstemp(suffix='.db', dir=cls._db_path)
-        cls._db_name = str(cls._db_name[1])
-        cls._db = Database()
-        cls._db.connect_db(cls._db_name)
-        cls._db.create_table()
-        cls._db.close_db()
+        cls._db_path, cls._db_name = create_db()
+        setup_db = Database(cls._db_name)
+        setup_db.create_table()
+        setup_db.close_db()
         cls._donelist = 'donelist'
         cls._course = 'course'
         cls._course_name = 'python'
@@ -36,48 +32,39 @@ class TestDatabase(unittest.TestCase):
 
         tearDownClass() is called after all the tests have run.
         """
-        remove(cls._db_name)
-        rmdir(cls._db_path)
+        remove_db(cls._db_path, cls._db_name)
 
     def setUp(self):
         """ Connect database
 
         setUp() is called before calling each test function.
         """
-        self._db.connect_db(self._db_name)
+        self.database = Database(self._db_name)
 
     def tearDown(self):
         """ Delete records and close database
 
         tearDown() is called after each test function is run.
         """
-        self._db.cur.execute('DELETE FROM donelist')
-        self._db.con.commit()
-        self._db.cur.execute('DELETE FROM course')
-        self._db.con.commit()
-        self._db.close_db()
-
-    def test_connect_db(self):
-        """ Test for connect_db()
-
-        Check that connect_db() is successful and None is returned.
-        """
-        self.assertIsNone(self._db.connect_db(self._db_name))
+        self.database.cur.execute('DELETE FROM donelist')
+        self.database.con.commit()
+        self.database.cur.execute('DELETE FROM course')
+        self.database.con.commit()
+        self.database.close_db()
 
     def test_close_db(self):
         """ Test for close_db()
 
         Check that the object-id of qlite3.connect() is closed.
         """
-        self._db.connect_db(self._db_name)
-        self._db.close_db()
-        connected_id = (hex(id(self._db.con)))
-        closed_id = self._db.con.close
+        connected_id = (hex(id(self.database.con)))
+        self.database.close_db()
+        closed_id = self.database.con.close
         closed_id = str(closed_id)
         self.assertIn(connected_id, closed_id)
 
         # Open database to make tearDown pass
-        self._db.connect_db(self._db_name)
+        self.database = Database(self._db_name)
 
     def test_create_table(self):
         """ Test for create_table()
@@ -96,20 +83,17 @@ class TestDatabase(unittest.TestCase):
                            "name TEXT NOT NULL UNIQUE)")
 
         # donelist
-        donelist = self._db.cur.execute("SELECT sql from sqlite_master \
+        donelist = self.database.cur.execute("SELECT sql from sqlite_master \
                                              WHERE type = 'table' AND name = 'donelist'")
         # Cast string to tuple to assertEqual() table schemas
         expected_donelist = tuple([expected_donelist])
         self.assertEqual(donelist.fetchone(), expected_donelist)
 
         # course
-        course = self._db.cur.execute("SELECT sql from sqlite_master \
+        course = self.database.cur.execute("SELECT sql from sqlite_master \
                                            WHERE type = 'table' AND name = 'course'")
         expected_course = tuple([expected_course])
         self.assertEqual(course.fetchone(), expected_course)
-
-        with self.assertRaises(sqlite3.OperationalError):
-            self._db.create_table()
 
     def test_show(self):
         """ Test for show()
@@ -121,8 +105,8 @@ class TestDatabase(unittest.TestCase):
         invalid_table = 'test'
 
         # course
-        self._db.insert_course(self._courses)
-        ret = self._db.show(self._course)
+        self.database.insert_course(self._courses)
+        ret = self.database.show(self._course)
         i = 0
 
         while i < len(ret):
@@ -130,17 +114,17 @@ class TestDatabase(unittest.TestCase):
             i += 1
 
         with self.assertRaises(RuntimeError):
-            self._db.show(invalid_table)
+            self.database.show(invalid_table)
 
         # donelist
-        self._db.insert_donelist(self._date, self._course_name, self._duration)
-        ret = self._db.show(self._donelist)
+        self.database.insert_donelist(self._date, self._course_name, self._duration)
+        ret = self.database.show(self._donelist)
         self.assertEqual(ret[0][1], self._date)
         self.assertEqual(ret[0][2], self._course_name)
         self.assertEqual(ret[0][3], self._duration)
 
         with self.assertRaises(RuntimeError):
-            self._db.show(invalid_table)
+            self.database.show(invalid_table)
 
     def test_insert_course(self):
         """ Test for insert_course()
@@ -150,10 +134,10 @@ class TestDatabase(unittest.TestCase):
         * when SQL statement fails, exception will be returned.
         """
         courses = [('python'), ('python')]
-        self.assertIsNone(self._db.insert_course(self._courses))
+        self.assertIsNone(self.database.insert_course(self._courses))
 
         with self.assertRaises(sqlite3.IntegrityError):
-            self._db.insert_course(courses)
+            self.database.insert_course(courses)
 
     def test_insert_donelist(self):
         """ Test for insert_donelist()
@@ -162,15 +146,16 @@ class TestDatabase(unittest.TestCase):
         * None is returned when SQL statement succeeds.
         * Exception is returned when SQL statement fails.
         """
-        self._db.insert_course(self._courses)
-        self.assertIsNone(self._db.insert_donelist(self._date, self._course_name, self._duration))
+        self.database.insert_course(self._courses)
+        self.assertIsNone(
+            self.database.insert_donelist(self._date, self._course_name, self._duration))
 
         course_name = 'japanese'
         with self.assertRaises(RuntimeError):
-            self._db.insert_donelist(self._date, course_name, self._duration)
+            self.database.insert_donelist(self._date, course_name, self._duration)
 
         with self.assertRaises(RuntimeError):
-            self._db.insert_donelist(self._date, self._course_name, self._duration)
+            self.database.insert_donelist(self._date, self._course_name, self._duration)
 
     def test_remove_course(self):
         """ Test for remove_course()
@@ -179,11 +164,11 @@ class TestDatabase(unittest.TestCase):
         * None is returned when SQL statement succeeds.
         * Exception is returned when SQL statement fails.
         """
-        self._db.insert_course(self._courses)
-        self.assertIsNone(self._db.remove_course(self._course_name))
+        self.database.insert_course(self._courses)
+        self.assertIsNone(self.database.remove_course(self._course_name))
 
         with self.assertRaises(RuntimeError):
-            self._db.remove_course(self._course_name)
+            self.database.remove_course(self._course_name)
 
     def test_remove_donelist(self):
         """ Test for remove_donelist()
@@ -192,9 +177,9 @@ class TestDatabase(unittest.TestCase):
         * None is returned when SQL statement succeeds.
         * Exception is returned when SQL statement fails.
         """
-        self._db.insert_course(self._courses)
-        self._db.insert_donelist(self._date, self._course_name, self._duration)
-        self.assertIsNone(self._db.remove_donelist(self._date, self._course_name))
+        self.database.insert_course(self._courses)
+        self.database.insert_donelist(self._date, self._course_name, self._duration)
+        self.assertIsNone(self.database.remove_donelist(self._date, self._course_name))
 
         with self.assertRaises(RuntimeError):
-            self._db.remove_donelist(self._date, self._course_name)
+            self.database.remove_donelist(self._date, self._course_name)
