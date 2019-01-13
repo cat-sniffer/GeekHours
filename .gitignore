@@ -8,3 +8,8 @@ __pycache__/
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+
+# Packaging directories
+build/
+geekhours.egg-info/
+dist/

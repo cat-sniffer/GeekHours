@@ -5,7 +5,7 @@ import argparse
 from os import path, getenv
 from typing import List
 from datetime import date
-from command import Command
+from geekhours.command import Command
 
 
 def initialize():

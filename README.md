@@ -84,4 +84,4 @@ geekhours done rm date course_name
 
 This project is licensed under the MIT License.
 
-[LICENSE.md](LICENSE.md)
+[LICENSE](LICENSE)
