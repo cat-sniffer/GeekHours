@@ -1,6 +1,6 @@
 PTH_FILE = geekhours.pth
 PTH_PATH = /usr/lib/python3.5/dist-packages
-PYTHON_FILES = $(shell find . -type f -name "*.py")
+PYTHON_FILES = $(shell find . -type f -name "*.py" -not -path "./build/*")
 CURRENT_DIR = $(CURDIR)
 
 # Execute as root
