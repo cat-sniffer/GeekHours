@@ -3,7 +3,7 @@
 __all__ = ['Command']
 
 from typing import List
-from database import Database
+from geekhours.database import Database
 
 
 class Command:

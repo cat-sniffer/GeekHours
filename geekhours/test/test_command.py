@@ -2,8 +2,8 @@
 
 import sqlite3
 import unittest
-from lib.command import Command
-from lib.util import create_db, remove_db
+from geekhours.command import Command
+from geekhours.util import create_db, remove_db
 
 
 class TestCommand(unittest.TestCase):
