@@ -1,0 +1,39 @@
+version: 2.1
+
+executors:
+    my-executor:
+        docker:
+            - image: circleci/python:3.7.2
+        environment:
+            - BASH_ENV: /tmp/bashrc
+
+jobs:
+    check:
+        executor: my-executor
+        steps:
+            - checkout
+            - run:
+                name: Make Composer executables available globally
+                command: |
+                  echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+                  source $BASH_ENV
+            - run:
+                name: Install
+                command: make setup
+            - run:
+                name: Lint
+                command: make lint
+    test:
+        executor: my-executor
+        steps:
+            - checkout
+            - run:
+                name: Unit test
+                command: make test_all
+
+workflows:
+    version: 2.1
+    check-test:
+        jobs:
+            - check
+            - test
