@@ -1,5 +1,7 @@
 # Geek Hours
 
+[![CircleCI](https://circleci.com/gh/YukieK/GeekHours.svg?style=svg)](https://circleci.com/gh/YukieK/GeekHours)
+
 **Table of Contents**
 
 - [Geek Hours](#geek-hours)
