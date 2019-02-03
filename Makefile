@@ -8,6 +8,9 @@ install:
 	mkdir -p $(PTH_PATH)
 	echo $(CURRENT_DIR)/geekhours > $(PTH_PATH)/$(PTH_FILE)
 
+setup:
+	pip3 install -U pylint pytest pycodestyle yapf --user
+
 test_all:
 	python3 -m unittest discover -v -s geekhours/test/
 
