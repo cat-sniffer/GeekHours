@@ -13,6 +13,7 @@
     - [Record](#record)
     - [List](#list)
     - [Delete](#delete)
+  - [Command Examples](#command-examples)
   - [Specifications](#specifications)
   - [License](#license)
 
@@ -78,6 +79,10 @@ Delete a study record:
 ```
 geekhours done rm date course_name
 ```
+
+## Command Examples
+
+[geekhours.md](geekhours.md)
 
 ## Specifications
 
