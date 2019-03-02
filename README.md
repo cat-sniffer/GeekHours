@@ -1,6 +1,7 @@
 # Geek Hours
-
-[![CircleCI](https://circleci.com/gh/YukieK/GeekHours.svg?style=svg)](https://circleci.com/gh/YukieK/GeekHours)
+[![CircleCI](https://img.shields.io/circleci/project/github/YukieK/GeekHours.svg?style=flat-square)](https://circleci.com/gh/YukieK/GeekHours)
+[![PyPI version](https://img.shields.io/pypi/v/GeekHours.svg?color=%2351A5DC&style=flat-square)](https://pypi.org/project/geekhours/)
+[![GitHub license](https://img.shields.io/github/license/YukieK/geekhours.svg?color=%23e84566&style=flat-square)](https://github.com/YukieK/GeekHours/blob/master/LICENSE)
 
 **Table of Contents**
 
@@ -12,6 +13,7 @@
     - [Record](#record)
     - [List](#list)
     - [Delete](#delete)
+  - [Command Examples](#command-examples)
   - [Specifications](#specifications)
   - [License](#license)
 
@@ -77,6 +79,10 @@ Delete a study record:
 ```
 geekhours done rm date course_name
 ```
+
+## Command Examples
+
+[geekhours.md](geekhours.md)
 
 ## Specifications
 
