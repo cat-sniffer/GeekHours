@@ -1,7 +1,17 @@
 version: 2.1
 
 executors:
-    my-executor:
+    python35:
+        docker:
+            - image: circleci/python:3.5.6
+        environment:
+            - BASH_ENV: /tmp/bashrc
+    python36:
+        docker:
+            - image: circleci/python:3.6.8
+        environment:
+            - BASH_ENV: /tmp/bashrc
+    python37:
         docker:
             - image: circleci/python:3.7.2
         environment:
@@ -9,7 +19,7 @@ executors:
 
 jobs:
     check:
-        executor: my-executor
+        executor: python37
         steps:
             - checkout
             - run:
@@ -23,8 +33,47 @@ jobs:
             - run:
                 name: Lint
                 command: make lint
-    test:
-        executor: my-executor
+    build:
+        executor: python37
+        steps:
+            - checkout
+            - run:
+                name: Build geekhours
+                command: make build
+    test-python35:
+        executor: python35
+        steps:
+            - checkout
+            - run:
+                name: Make Composer executables available globally
+                command: |
+                  echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+                  source $BASH_ENV
+            - run:
+                name: Unit test on python 3.5
+                command: make test_all
+            - run:
+                name: Install geekhours package on python 3.5
+                command:
+                  make tox
+    test-python36:
+        executor: python36
+        steps:
+            - checkout
+            - run:
+                name: Make Composer executables available globally
+                command: |
+                  echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+                  source $BASH_ENV
+            - run:
+                name: Unit test on python 3.6
+                command: make test_all
+            - run:
+                name: Install geekhours package on python 3.6
+                command:
+                  make tox
+    test-python37:
+        executor: python37
         steps:
             - checkout
             - run:
@@ -33,7 +82,10 @@ jobs:
 
 workflows:
     version: 2.1
-    check-test:
+    test:
         jobs:
             - check
-            - test
+            - build
+            - test-python35
+            - test-python36
+            - test-python37

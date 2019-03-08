@@ -28,6 +28,10 @@ lint:
 build:
 	python3 setup.py sdist bdist_wheel	
 
+tox:
+	pip3 install -U tox --user
+	tox
+
 clean:
 	python3 setup.py clean --all
 
