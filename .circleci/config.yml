@@ -82,7 +82,7 @@ jobs:
 
 workflows:
     version: 2.1
-    check-test:
+    test:
         jobs:
             - check
             - build
