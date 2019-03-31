@@ -2,6 +2,7 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/YukieK/GeekHours.svg?style=flat-square)](https://circleci.com/gh/YukieK/GeekHours)
 [![PyPI version](https://img.shields.io/pypi/v/GeekHours.svg?color=%2351A5DC&style=flat-square)](https://pypi.org/project/geekhours/)
 [![GitHub license](https://img.shields.io/github/license/YukieK/geekhours.svg?color=%23e84566&style=flat-square)](https://github.com/YukieK/GeekHours/blob/master/LICENSE)
+[![Coverage Status](https://img.shields.io/coveralls/github/YukieK/GeekHours.svg?style=flat-square)](https://coveralls.io/github/YukieK/GeekHours)
 
 **Table of Contents**
 

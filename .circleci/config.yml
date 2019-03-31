@@ -50,9 +50,6 @@ jobs:
                   echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                   source $BASH_ENV
             - run:
-                name: Unit test on python 3.5
-                command: make test_all
-            - run:
                 name: Install geekhours package on python 3.5
                 command:
                   make tox
@@ -66,9 +63,6 @@ jobs:
                   echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                   source $BASH_ENV
             - run:
-                name: Unit test on python 3.6
-                command: make test_all
-            - run:
                 name: Install geekhours package on python 3.6
                 command:
                   make tox
@@ -77,8 +71,13 @@ jobs:
         steps:
             - checkout
             - run:
-                name: Unit test
-                command: make test_all
+                name: Make Composer executables available globally
+                command: |
+                  echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+                  source $BASH_ENV
+            - run:
+                name: Install geekhours package on python 3.7
+                command: make tox
 
 workflows:
     version: 2.1
