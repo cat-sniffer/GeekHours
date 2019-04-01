@@ -51,8 +51,7 @@ jobs:
                   source $BASH_ENV
             - run:
                 name: Install geekhours package on python 3.5
-                command:
-                  make tox
+                command: make tox
     test-python36:
         executor: python36
         steps:
@@ -64,8 +63,7 @@ jobs:
                   source $BASH_ENV
             - run:
                 name: Install geekhours package on python 3.6
-                command:
-                  make tox
+                command: make tox
     test-python37:
         executor: python37
         steps:
