@@ -19,12 +19,6 @@ setup(
     license='MIT',
     packages=find_packages(),
     scripts=['bin/geekhours'],
-    package_data={'': [
-        'Makefile',
-        '*.yml'
-        '.gitignore',
-        '.style.yapf',
-    ]},
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: MIT License',
