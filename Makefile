@@ -1,13 +1,7 @@
-PTH_FILE = geekhours.pth
-PTH_PATH = /usr/lib/python3.5/dist-packages
 PYTHON_FILES = $(shell find . -type f -name "*.py" -not -path "./build/*")
 CURRENT_DIR = $(CURDIR)
 
 # Execute as root
-install:
-	mkdir -p $(PTH_PATH)
-	echo $(CURRENT_DIR)/geekhours > $(PTH_PATH)/$(PTH_FILE)
-
 setup:
 	pip3 install -U pylint pytest pycodestyle yapf --user
 
