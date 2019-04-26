@@ -16,7 +16,7 @@ class Command:
     def show(self, arg: str):
         """ Call database.show() """
         records = self.database.show(arg)
-        print(records)
+        return records
 
     def insert_course(self, arg: List[str]):
         """ Call database.insert_course() """

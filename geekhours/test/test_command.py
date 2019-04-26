@@ -54,10 +54,12 @@ class TestCommand(unittest.TestCase):
     def test_show(self):
         """ Test for show()
 
-        Assert show() calls the Database.show().
+        Assert;
+            * Command.show() calls the Database.show() and it succeeds.
+            * RuntimeError is raised if an invalid table name is passed.
         """
-        self.assertIsNone(self._command.show('course'))
-        self.assertIsNone(self._command.show('donelist'))
+        self._command.show('course')
+        self._command.show('donelist')
 
         wrong_name = None
         with self.assertRaises(RuntimeError):
