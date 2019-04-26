@@ -95,6 +95,19 @@ class TestDatabase(unittest.TestCase):
         expected_course = tuple([expected_course])
         self.assertEqual(course.fetchone(), expected_course)
 
+    def test_get_column(self):
+        """ Test get_colmun()
+
+        Assert get_colmun() returns colmun names of the records.
+        """
+        course_columns = ['id', 'name']
+        donelist_columns = ['id', 'date', 'course', 'duration']
+
+        self.database.insert_course(self._courses)
+        self.assertEqual(self.database.get_column(self._course), course_columns)
+        self.database.insert_donelist(self._date, self._course_name, self._duration)
+        self.assertEqual(self.database.get_column(self._donelist), donelist_columns)
+
     def test_show(self):
         """ Test for show()
 
