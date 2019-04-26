@@ -18,9 +18,46 @@ def initialize():
 
 # Handlers for course_subparser
 def list_course(args: str, db_path: str):
-    """ geekhours course list """
+    """ geekhours course list
+
+    Options:
+        --format, -f: Format records to comma separated CSV or JSON and
+                      write to a file.
+        --output, -o: Specify a file path to save records.
+    """
     cmd = Command(db_path)
-    cmd.show(args.course)
+    records = cmd.show(args.course)
+    column = cmd.show_column(args.course)
+    default_name = ['courses.csv', 'courses.json']
+
+    if args.format == 'csv':
+        if args.output:
+            try:
+                cmd.dump_to_csv(records, args.output, column)
+                print(args.output)
+            except FileExistsError as error:
+                print(error)
+        else:
+            try:
+                cmd.dump_to_csv(records, default_name[0], column)
+                print(default_name[0])
+            except FileExistsError as error:
+                print(error)
+    if args.format == 'json':
+        if args.output:
+            try:
+                cmd.dump_to_json(records, args.output)
+                print(args.output)
+            except FileExistsError as error:
+                print(error)
+        else:
+            try:
+                cmd.dump_to_json(records, default_name[1])
+                print(default_name[1])
+            except FileExistsError as error:
+                print(error)
+    if not args.format:
+        print(records)
 
 
 def add_course(args: List[str], db_path: str):
@@ -37,9 +74,47 @@ def remove_course(args: str, db_path: str):
 
 # Handlers for done_subparser
 def list_done(args: str, db_path: str):
-    """ geekhours done list """
+    """ geekhours done list
+
+    Options:
+        --format, -f: Format records to comma separated CSV or JSON and
+                      write to a file.
+        --output, -o: Specify a file path to save records.
+    """
     cmd = Command(db_path)
-    cmd.show(args.done)
+    records = cmd.show(args.done)
+    column = cmd.show_column(args.done)
+    default_name = ['records.csv', 'records.json']
+
+    if args.format == 'csv':
+        if args.output:
+            try:
+                cmd.dump_to_csv(records, args.output, column)
+                print(args.output)
+            except FileExistsError as error:
+                print(error)
+        else:
+            try:
+                cmd.dump_to_csv(records, default_name[0], column)
+                print(default_name[0])
+            except FileExistsError as error:
+                print(error)
+    if args.format == 'json':
+        if args.output:
+            try:
+                cmd.dump_to_json(records, args.output)
+                print(args.output)
+            except FileExistsError as error:
+                print(error)
+        else:
+            try:
+                cmd.dump_to_json(records, default_name[1])
+                print(default_name[1])
+            except FileExistsError as error:
+                print(error)
+
+    if not args.format:
+        print(records)
 
 
 def add_done(args: str, db_path: str):
@@ -94,6 +169,14 @@ def get_args(today: str):
     # course list
     list_parser = course_subparser.add_parser('list', help='List the courses.')
     list_parser.set_defaults(course='course', handler=list_course)
+    list_parser.add_argument(
+        '-f',
+        '--format',
+        choices=['csv', 'json'],
+        help="Format records to comma separated CSV or JSON and write them to a file.\
+              'records.csv' or 'records.json' will be created depending on the format type.\
+              Use '--output' or '-o' options to specify a file name.")
+    list_parser.add_argument('-o', '--output', help="Specify a file path to save.")
 
     # done commnad
     done_parser = subparsers.add_parser('done', help='Manipulate done.')
@@ -128,6 +211,14 @@ def get_args(today: str):
 
     # done list
     done_list_parser = done_subparser.add_parser('list', help='List done.')
+    done_list_parser.add_argument(
+        '-f',
+        '--format',
+        choices=['csv', 'json'],
+        help="Format records to comma separated CSV or JSON and write them to a file.\
+              'records.csv' or 'records.json' will be created depending on the format type.\
+              Use '--output' or '-o' options to specify a file name.")
+    done_list_parser.add_argument('-o', '--output', help="Specify a file path to save.")
     done_list_parser.set_defaults(done='donelist', handler=list_done)
 
     args = parser.parse_args()
