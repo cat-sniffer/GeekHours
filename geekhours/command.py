@@ -3,6 +3,7 @@
 __all__ = ['Command']
 
 import csv
+import json
 from pathlib import Path
 from typing import List, Tuple
 from geekhours.database import Database
@@ -60,3 +61,18 @@ class Command:
             csv_writer = csv.writer(outcsv, delimiter=',')
             for record in records:
                 csv_writer.writerow(record)
+
+    @staticmethod
+    def dump_to_json(records: str, jsonfile: str):
+        """ dump outputs to JSON and write it to a file.
+
+        args:
+            records: Target data to write.
+            jsonfile: File path to save.
+        """
+        jsonfile = Path(jsonfile)
+
+        if jsonfile.exists():
+            raise FileExistsError('{} exists'.format(jsonfile))
+        with open(str(jsonfile), 'w') as outjson:
+            json.dump(records, outjson)

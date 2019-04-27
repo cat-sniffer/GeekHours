@@ -144,3 +144,17 @@ class TestCommand(unittest.TestCase):
 
         with self.assertRaises(FileExistsError):
             self._command.dump_to_csv(records, csvfile, fields)
+
+    def test_dump_to_json(self):
+        """ Test dump_to_json()
+
+        Assert:
+            * The method succeeds with no error and returns None.
+            * FileExistsError is raised if file already exists.
+        """
+        records = self._command.show('donelist')
+        jsonfile = self._db_path + 'test.json'
+        self.assertIsNone(self._command.dump_to_json(records, jsonfile))
+
+        with self.assertRaises(FileExistsError):
+            self._command.dump_to_json(records, jsonfile)
