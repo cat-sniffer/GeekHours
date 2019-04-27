@@ -129,3 +129,18 @@ class TestCommand(unittest.TestCase):
 
         # Insertion for tearDown()
         self._command.insert_donelist(self._date, self._course_name_python, self._duration)
+
+    def test_dump_to_csv(self):
+        """ Test dump_to_csv()
+
+        Assert:
+            * The method succeeds with no error and returns None.
+            * FileExistsError is raised if file already exists.
+        """
+        records = self._command.show('course')
+        csvfile = self._db_path + 'test.csv'
+        fields = self._command.show_column('course')
+        self.assertIsNone(self._command.dump_to_csv(records, csvfile, fields))
+
+        with self.assertRaises(FileExistsError):
+            self._command.dump_to_csv(records, csvfile, fields)

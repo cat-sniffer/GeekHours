@@ -2,7 +2,9 @@
 
 __all__ = ['Command']
 
-from typing import List
+import csv
+from pathlib import Path
+from typing import List, Tuple
 from geekhours.database import Database
 
 
@@ -38,3 +40,23 @@ class Command:
     def remove_donelist(self, date: str, course: str):
         """ Call database.remove_donelist() """
         self.database.remove_donelist(date, course)
+
+    @staticmethod
+    def dump_to_csv(records: str, csvfile: str, fields: Tuple):
+        """ dump outputs to comma separated CSV.
+
+        args:
+            records: Target data to dump.
+            csvfile: File path to save.
+            fields: Tuple object of a header row of the records.
+        """
+        csvfile = Path(csvfile)
+
+        if csvfile.exists():
+            raise FileExistsError('{} exists'.format(csvfile))
+        with open(str(csvfile), 'w', newline='') as outcsv:
+            writer = csv.DictWriter(outcsv, fieldnames=fields)
+            writer.writeheader()
+            csv_writer = csv.writer(outcsv, delimiter=',')
+            for record in records:
+                csv_writer.writerow(record)
