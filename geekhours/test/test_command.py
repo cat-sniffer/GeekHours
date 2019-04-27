@@ -51,6 +51,15 @@ class TestCommand(unittest.TestCase):
         self._command.remove_course(self._course_name_math)
         self._command.remove_course(self._course_name_eng)
 
+    def test_show_column(self):
+        """ Test show_column()
+
+        Assert show_colmun() calls Database.get_column() and
+        no exception is raised.
+        """
+        self._command.show_column('course')
+        self._command.show_column('donelist')
+
     def test_show(self):
         """ Test for show()
 

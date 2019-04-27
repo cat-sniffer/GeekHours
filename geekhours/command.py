@@ -13,6 +13,11 @@ class Command:
         self.database = Database(db_name)
         self.database.create_table()
 
+    def show_column(self, arg: str):
+        """ Call database.get_column() """
+        column = self.database.get_column(arg)
+        return column
+
     def show(self, arg: str):
         """ Call database.show() """
         records = self.database.show(arg)
