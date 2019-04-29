@@ -39,6 +39,19 @@ class Database:
             self.cur.execute(donelist)
             self.cur.execute(course)
 
+    def get_column(self, table: str):
+        """ Get column names """
+        self.con.row_factory = sqlite3.Row
+        cur = self.con.cursor()
+
+        if table == self.course:
+            course_columns = cur.execute('SELECT * FROM course').fetchone()
+            columns = course_columns.keys()
+        elif table == self.donelist:
+            donelist_columns = cur.execute('SELECT * FROM donelist').fetchone()
+            columns = donelist_columns.keys()
+        return columns
+
     def show(self, table: str):
         """  Show table """
         if table == self.course:

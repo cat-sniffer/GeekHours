@@ -51,13 +51,24 @@ class TestCommand(unittest.TestCase):
         self._command.remove_course(self._course_name_math)
         self._command.remove_course(self._course_name_eng)
 
+    def test_show_column(self):
+        """ Test show_column()
+
+        Assert show_colmun() calls Database.get_column() and
+        no exception is raised.
+        """
+        self._command.show_column('course')
+        self._command.show_column('donelist')
+
     def test_show(self):
         """ Test for show()
 
-        Assert show() calls the Database.show().
+        Assert;
+            * Command.show() calls the Database.show() and it succeeds.
+            * RuntimeError is raised if an invalid table name is passed.
         """
-        self.assertIsNone(self._command.show('course'))
-        self.assertIsNone(self._command.show('donelist'))
+        self._command.show('course')
+        self._command.show('donelist')
 
         wrong_name = None
         with self.assertRaises(RuntimeError):
@@ -118,3 +129,32 @@ class TestCommand(unittest.TestCase):
 
         # Insertion for tearDown()
         self._command.insert_donelist(self._date, self._course_name_python, self._duration)
+
+    def test_dump_to_csv(self):
+        """ Test dump_to_csv()
+
+        Assert:
+            * The method succeeds with no error and returns None.
+            * FileExistsError is raised if file already exists.
+        """
+        records = self._command.show('course')
+        csvfile = self._db_path + 'test.csv'
+        fields = self._command.show_column('course')
+        self.assertIsNone(self._command.dump_to_csv(records, csvfile, fields))
+
+        with self.assertRaises(FileExistsError):
+            self._command.dump_to_csv(records, csvfile, fields)
+
+    def test_dump_to_json(self):
+        """ Test dump_to_json()
+
+        Assert:
+            * The method succeeds with no error and returns None.
+            * FileExistsError is raised if file already exists.
+        """
+        records = self._command.show('donelist')
+        jsonfile = self._db_path + 'test.json'
+        self.assertIsNone(self._command.dump_to_json(records, jsonfile))
+
+        with self.assertRaises(FileExistsError):
+            self._command.dump_to_json(records, jsonfile)

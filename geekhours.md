@@ -80,6 +80,35 @@ $ geekhours done list
 ]
 ```
 
+## Format records to comma separated CSV or JSON
+
+The '-f' and '--format' options can be used to write records to comma separated CSV or JSON.
+
+### `geekhours course list` command:
+
+`courses.csv` or `courses.json` will be created depending on the format type.
+
+```
+$ geekhours course list -f|--format csv|json
+```
+
+### `geekhours done list` command:
+
+`records.csv` or `records.json` will be created depending on the format type.
+
+```
+$ geekhours done list -f|--format csv|json
+```
+
+### Specify the file name
+
+File name can be specified by giving it to `-o` or `--output` options.
+
+```
+$ geekhours course list -f csv -o [FILE-PATH]
+$ geekhours done list --format json --output [FILE-PATH]
+```
+
 ## Delete a record of study time
 
 ```
