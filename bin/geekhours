@@ -131,6 +131,40 @@ def remove_done(args: str, db_path: str):
     cmd.remove_donelist(args.date, args.course_name)
 
 
+# geekhours sum
+def sum_hours(args: str, db_path: str):
+    """ geekhours sum """
+    cmd = Command(db_path)
+    print(cmd.show_total_hours())
+
+
+# geekhours sum course
+def sum_hours_course(args: str, db_path: str):
+    """ geekhours sum course """
+    cmd = Command(db_path)
+    print(cmd.show_total_hours_course())
+
+
+# geekhours sum week
+def sum_hours_week(args: str, db_path: str):
+    """ geekhours sum week """
+    cmd = Command(db_path)
+    if args.course:
+        print(cmd.show_total_hours_week(args.course))
+    else:
+        print(cmd.show_total_hours_week())
+
+
+# geekhours sum month
+def sum_hours_month(args: str, db_path: str):
+    """ geekhours sum month """
+    cmd = Command(db_path)
+    if args.course:
+        print(cmd.show_total_hours_month(args.course))
+    else:
+        print(cmd.show_total_hours_month())
+
+
 def get_args(today: str):
     """ Parsers for 'corse' and 'done' sub-commands """
     parser = argparse.ArgumentParser(
@@ -220,6 +254,30 @@ def get_args(today: str):
               Use '--output' or '-o' options to specify a file name.")
     done_list_parser.add_argument('-o', '--output', help="Specify a file path to save.")
     done_list_parser.set_defaults(done='donelist', handler=list_done)
+
+    # geekhours sum
+    sum_parser = subparsers.add_parser('sum', help='Display the total hours studied.')
+    sum_parser.set_defaults(handler=sum_hours)
+
+    # Sub-command of 'geekshours sum'
+    sum_subparser = sum_parser.add_subparsers()
+
+    # geekhours sum course
+    sum_course_parser = sum_subparser.add_parser('course',
+                                                 help='Display the total hours per course.')
+    sum_course_parser.set_defaults(handler=sum_hours_course)
+
+    # geekhours sum week
+    sum_week_parser = sum_subparser.add_parser('week', help='Display the total hours per week.')
+    sum_week_parser.add_argument('-c', '--course', help='Display total time per week by course.')
+    sum_week_parser.set_defaults(handler=sum_hours_week)
+
+    # geekhours sum month
+    sum_month_parser = sum_subparser.add_parser('month', help='Display the total hours per month.')
+    sum_month_parser.add_argument('-c',
+                                  '--course',
+                                  help='Display total hours per month for the specific course.')
+    sum_month_parser.set_defaults(handler=sum_hours_month)
 
     args = parser.parse_args()
     return args
