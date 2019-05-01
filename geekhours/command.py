@@ -46,6 +46,11 @@ class Command:
         """ Call database.get_total_hours() """
         return self.database.get_total_hours()
 
+    def show_total_hours_course(self):
+        """ Call database.get_total_hours_course() """
+        return self.database.get_total_hours_course()
+
+
     @staticmethod
     def dump_to_csv(records: str, csvfile: str, fields: Tuple):
         """ dump outputs to comma separated CSV.

@@ -166,3 +166,11 @@ class TestCommand(unittest.TestCase):
         succeeds.
         """
         self._command.show_total_hours()
+
+    def test_show_total_hours_course(self):
+        """ Test show_total_hours_course()
+
+        Assert show_total_hours_course() calls
+        Database.get_total_hours_course() and succeeds.
+        """
+        self._command.show_total_hours_course()
