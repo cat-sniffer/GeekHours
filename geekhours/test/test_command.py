@@ -184,3 +184,13 @@ class TestCommand(unittest.TestCase):
         """
         self._command.show_total_hours_week()
         self._command.show_total_hours_week(self._course_name_python)
+
+    def test_show_total_hours_month(self):
+        """ Test show_total_hours_month()
+
+        Assert:
+            * show_total_hours_month() calls
+              Database.get_total_hours_month() and succeeds.
+        """
+        self._command.show_total_hours_month()
+        self._command.show_total_hours_month(self._course_name_python)

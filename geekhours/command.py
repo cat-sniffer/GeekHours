@@ -58,6 +58,14 @@ class Command:
             total = self.database.get_total_hours_week()
         return total
 
+    def show_total_hours_month(self, course: str = None):
+        """ Call database.get_total_hours_month() """
+        if course:
+            total = self.database.get_total_hours_month(course)
+        else:
+            total = self.database.get_total_hours_month()
+        return total
+
     @staticmethod
     def dump_to_csv(records: str, csvfile: str, fields: Tuple):
         """ dump outputs to comma separated CSV.
