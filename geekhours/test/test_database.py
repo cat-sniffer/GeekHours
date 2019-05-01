@@ -165,12 +165,16 @@ class TestDatabase(unittest.TestCase):
             self.database.insert_donelist(self._date, self._course_name, self._duration))
 
         course_name = 'japanese'
+        not_zero_padded = '2019-4-1'
 
         with self.assertRaises(RuntimeError):
             self.database.insert_donelist(self._date, course_name, self._duration)
 
         with self.assertRaises(RuntimeError):
             self.database.insert_donelist(self._date, self._course_name, self._duration)
+
+        with self.assertRaises(ValueError):
+            self.database.insert_donelist(not_zero_padded, self._course_name, self._duration)
 
     def test_remove_course(self):
         """ Test for remove_course()

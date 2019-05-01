@@ -98,6 +98,9 @@ class Database:
         if check_duplicate:
             raise RuntimeError("Record already exists in 'donelist' table.")
 
+        if len(date) < 10:
+            raise ValueError("The date must be in zero-padded YYYY-MM-DD format.")
+
         date = datetime.strptime(date, '%Y-%m-%d').date()
 
         with self.con:
