@@ -134,3 +134,14 @@ class Database:
                 course,
             ))
             print('Removed record.')
+
+    def get_total_hours(self):
+        """ Get the total hours
+
+        Get the total number of hours and return it.
+        """
+        with self.con:
+            total = self.cur.execute(
+                ("SELECT 'Total: ', SUM(donelist.duration) FROM donelist")).fetchall()
+
+        return total

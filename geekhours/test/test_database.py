@@ -196,3 +196,14 @@ class TestDatabase(unittest.TestCase):
 
         with self.assertRaises(RuntimeError):
             self.database.remove_donelist(self._date, self._course_name)
+
+    def test_get_total_hours(self):
+        """ Test get_total_hours()
+
+        Assert that get_total_hours() returns the total hours as expected.
+        """
+        total = [('Total: ', 4)]
+        self.database.insert_course(self._courses)
+        self.database.insert_donelist('2019-04-01', 'python', '2')
+        self.database.insert_donelist('2019-05-01', 'art', '2')
+        self.assertEqual(self.database.get_total_hours(), total)
