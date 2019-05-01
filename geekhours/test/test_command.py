@@ -174,3 +174,13 @@ class TestCommand(unittest.TestCase):
         Database.get_total_hours_course() and succeeds.
         """
         self._command.show_total_hours_course()
+
+    def test_show_total_hours_week(self):
+        """ Test show_total_hours_week()
+
+        Assert:
+            * show_total_hours_week() calls
+              Database.get_total_hours_week() and succeeds.
+        """
+        self._command.show_total_hours_week()
+        self._command.show_total_hours_week(self._course_name_python)

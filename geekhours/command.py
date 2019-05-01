@@ -50,6 +50,13 @@ class Command:
         """ Call database.get_total_hours_course() """
         return self.database.get_total_hours_course()
 
+    def show_total_hours_week(self, course: str = None):
+        """ Call database.get_total_hours_week() """
+        if course:
+            total = self.database.get_total_hours_week(course)
+        else:
+            total = self.database.get_total_hours_week()
+        return total
 
     @staticmethod
     def dump_to_csv(records: str, csvfile: str, fields: Tuple):
