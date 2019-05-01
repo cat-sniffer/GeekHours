@@ -4,7 +4,7 @@
 import argparse
 from os import path, getenv
 from typing import List
-from datetime import date
+from datetime import date, datetime
 from geekhours.command import Command
 
 
@@ -12,7 +12,7 @@ def initialize():
     """ Initialize database. """
     db_name = '.geekhours.db'
     db_path = path.join(getenv('HOME'), db_name)
-    today = date.today().strftime('%Y%m%d')
+    today = datetime.strptime(str(date.today()), '%Y-%m-%d').date()
     return db_path, today
 
 
@@ -226,7 +226,8 @@ def get_args(today: str):
         '--date',
         nargs='?',
         default=today,
-        help='The day you studied. Today (yyyymmdd) is default.')
+        help='The date you studied in zero-padded YYYY-MM-DD format. '
+             "If omitted, today's date will be registered by default.")
     done_add_parser.add_argument('course_name', help='Course name you studied.')
     done_add_parser.add_argument(
         '-D',
