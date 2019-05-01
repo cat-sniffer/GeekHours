@@ -145,3 +145,15 @@ class Database:
                 ("SELECT 'Total: ', SUM(donelist.duration) FROM donelist")).fetchall()
 
         return total
+
+    def get_total_hours_course(self):
+        """ Get the total hours per course
+
+        Get the total number of hours per course and return it.
+        """
+        with self.con:
+            total = self.cur.execute(("SELECT course.name, SUM(donelist.duration) "
+                                      "FROM donelist "
+                                      "INNER JOIN course ON course.name = donelist.course "
+                                      "GROUP BY course.name")).fetchall()
+        return total

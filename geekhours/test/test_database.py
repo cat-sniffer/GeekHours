@@ -207,3 +207,19 @@ class TestDatabase(unittest.TestCase):
         self.database.insert_donelist('2019-04-01', 'python', '2')
         self.database.insert_donelist('2019-05-01', 'art', '2')
         self.assertEqual(self.database.get_total_hours(), total)
+
+    def test_get_total_hours_course(self):
+        """ Test get_total_hours_course()
+
+        Assert that get_total_hours_course() returns the total number of
+        hours per course as expected.
+        """
+        check_total = [('art', 6), ('python', 4)]
+
+        self.database.insert_course(self._courses)
+        self.database.insert_donelist('2019-04-01', 'python', '2')
+        self.database.insert_donelist('2019-05-01', 'python', '2')
+        self.database.insert_donelist('2019-04-30', 'art', '3')
+        self.database.insert_donelist('2019-05-01', 'art', '3')
+        total = self.database.get_total_hours_course()
+        self.assertEqual(total, check_total)
