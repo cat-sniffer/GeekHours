@@ -158,3 +158,11 @@ class TestCommand(unittest.TestCase):
 
         with self.assertRaises(FileExistsError):
             self._command.dump_to_json(records, jsonfile)
+
+    def test_show_total_hours(self):
+        """ Test show_total_hours()
+
+        Assert show_total_hours() calls Database.get_total_hours() and
+        succeeds.
+        """
+        self._command.show_total_hours()

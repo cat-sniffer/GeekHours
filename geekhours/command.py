@@ -42,6 +42,10 @@ class Command:
         """ Call database.remove_donelist() """
         self.database.remove_donelist(date, course)
 
+    def show_total_hours(self):
+        """ Call database.get_total_hours() """
+        return self.database.get_total_hours()
+
     @staticmethod
     def dump_to_csv(records: str, csvfile: str, fields: Tuple):
         """ dump outputs to comma separated CSV.
