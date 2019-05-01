@@ -157,3 +157,30 @@ class Database:
                                       "INNER JOIN course ON course.name = donelist.course "
                                       "GROUP BY course.name")).fetchall()
         return total
+
+    def get_total_hours_week(self, course: str = None):
+        """ Get the total hours per week
+
+        Get the total number of hours per week and return it.
+        If the course name is passed as an argument, return the total
+        hours per week for each course.
+
+        Args:
+            course: Target course name to get the total hours.
+        """
+        with self.con:
+            if not course:
+                total = self.cur.execute(
+                    ("SELECT strftime('%w', donelist.date) AS week, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "GROUP BY week")).fetchall()
+            else:
+                total = self.cur.execute(
+                    ("SELECT strftime('%w', donelist.date) AS week, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "WHERE course=? "
+                     "GROUP BY week"), (course,)).fetchall()
+
+        return total

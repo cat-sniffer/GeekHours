@@ -223,3 +223,33 @@ class TestDatabase(unittest.TestCase):
         self.database.insert_donelist('2019-05-01', 'art', '3')
         total = self.database.get_total_hours_course()
         self.assertEqual(total, check_total)
+
+    def test_get_total_hours_week(self):
+        """ Test get_total_hours_week()
+
+        Assert:
+            * get_total_hours_course() returns the total hours per week
+              as expected.
+            * If the course name is passed as an argument, return the
+              total hours per week for each course.
+        """
+        self.database.insert_course(self._courses)
+
+        # Monday python
+        self.database.insert_donelist('2019-04-01', 'python', '1')
+        self.database.insert_donelist('2019-04-29', 'python', '1')
+        self.database.insert_donelist('2019-04-29', 'art', '2')
+        self.database.insert_donelist('2019-05-06', 'art', '2')
+
+        # Tuesday python
+        self.database.insert_donelist('2019-04-02', 'python', '2')
+        self.database.insert_donelist('2019-04-30', 'python', '2')
+        self.database.insert_donelist('2019-05-07', 'art', '3')
+
+        courses = [('1', 6), ('2', 7)]
+        python = [('1', 2), ('2', 4)]
+        art = [('1', 4), ('2', 3)]
+
+        self.assertEqual(self.database.get_total_hours_week(), courses)
+        self.assertEqual(self.database.get_total_hours_week(course='python'), python)
+        self.assertEqual(self.database.get_total_hours_week(course='art'), art)
