@@ -1,5 +1,6 @@
 """ database.py is a module to communicate with a database. """
 
+from datetime import datetime
 import sqlite3
 from typing import List
 
@@ -79,6 +80,9 @@ class Database:
         Insert donelist into the 'donelist' table.
         The course name must be a registered name in the 'course' table.
         """
+        if date is not str:
+            date = str(date)
+
         check_course_name = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
         check_course_name = check_course_name.fetchall()
         check_duplicate = self.con.execute(
@@ -93,6 +97,8 @@ class Database:
 
         if check_duplicate:
             raise RuntimeError("Record already exists in 'donelist' table.")
+
+        date = datetime.strptime(date, '%Y-%m-%d').date()
 
         with self.con:
             self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)', (

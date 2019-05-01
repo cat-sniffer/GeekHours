@@ -21,7 +21,7 @@ class TestCommand(unittest.TestCase):
         cls._course_name_math = 'math'
         cls._course_name_eng = 'english'
         cls._courses = [cls._course_name_python, cls._course_name_math, cls._course_name_eng]
-        cls._date = '20181101'
+        cls._date = '2018-11-01'
         cls._duration = '5'
         cls._donelist = [cls._date, cls._course_name_python, cls._duration]
 
@@ -98,7 +98,7 @@ class TestCommand(unittest.TestCase):
             self._command.insert_donelist(self._date, self._course_name_python, self._duration))
         wrong_duration = None
         with self.assertRaises(sqlite3.IntegrityError):
-            self._command.insert_donelist('20181212', self._course_name_python, wrong_duration)
+            self._command.insert_donelist('2018-12-12', self._course_name_python, wrong_duration)
 
     def test_remove_course(self):
         """ Test for insert_course()

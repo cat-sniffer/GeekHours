@@ -22,7 +22,7 @@ class TestDatabase(unittest.TestCase):
         cls._donelist = 'donelist'
         cls._course = 'course'
         cls._course_name = 'python'
-        cls._date = '0801'
+        cls._date = '2018-08-01'
         cls._duration = '5'
         cls._courses = [('python'), ('art'), ('math')]
 
@@ -158,12 +158,14 @@ class TestDatabase(unittest.TestCase):
         Check that
         * None is returned when SQL statement succeeds.
         * Exception is returned when SQL statement fails.
+        * ValueError is raised if the date is not in YYYY-MM-DD format.
         """
         self.database.insert_course(self._courses)
         self.assertIsNone(
             self.database.insert_donelist(self._date, self._course_name, self._duration))
 
         course_name = 'japanese'
+
         with self.assertRaises(RuntimeError):
             self.database.insert_donelist(self._date, course_name, self._duration)
 
