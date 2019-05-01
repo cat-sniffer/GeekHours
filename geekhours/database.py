@@ -184,3 +184,30 @@ class Database:
                      "GROUP BY week"), (course,)).fetchall()
 
         return total
+
+    def get_total_hours_month(self, course=None):
+        """ Get the total hours per month
+
+        Get the total number of hours per month and return it.
+        If the course name is passed as an argument, return the total
+        hours per month for each course.
+
+        Args:
+            course: Target course name to get the total hours.
+        """
+        with self.con:
+            if not course:
+                total = self.cur.execute(
+                    ("SELECT strftime('%m', donelist.date) AS month, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "GROUP BY month")).fetchall()
+            else:
+                total = self.cur.execute(
+                    ("SELECT strftime('%m', donelist.date) AS month, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "WHERE course=? "
+                     "GROUP BY month"), (course,)).fetchall()
+
+        return total
