@@ -17,10 +17,15 @@ Synopsis:
   geekhours done list
   geekhours done add [--date [date]] [--duration [duration]] course_name
   geekhours done rm date course_name
+  geekhours sum
+  geekhours sum course
+  geekhours sum week [-c|--course [course_name]]
+  geekhours sum month [-c|--course [course_name]]
 
-  {course,done}  Sub commands.
-    course       Manipulate course.
-    done         Manipulate done.
+  {course,done,sum}  Sub commands.
+    course           Manipulate course.
+    done             Manipulate done.
+    sum              Display the total hours studied.
 ```
 
 ## Add courses
@@ -121,4 +126,34 @@ Removed record.
 ```
 $ geekhours course rm English
 Removed 'English' from course.
+```
+
+## Display the total hours
+
+```
+$ geekhours sum
+```
+
+### Total hours per week
+
+```
+$ geekhours sum week
+```
+
+#### Total hours per week by course
+
+```
+$ geekhours sum week -c|--course COURSE-NAME
+```
+
+### Total hours per month
+
+```
+$ geekhours sum month
+```
+
+#### Total hours per month by course
+
+```
+$ geekhours sum month -c|--course COURSE-NAME
 ```
