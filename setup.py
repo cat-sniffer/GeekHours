@@ -1,33 +1,44 @@
 """ Build script for setuptools """
 
+# pylint: disable=C0103,W0122
+
+from pathlib import Path
 from setuptools import find_packages, setup
 
-with open('README.md', 'r') as fh:
-    # pylint: disable=C0103
-    long_description = fh.read()
+base_dir = Path.cwd()
+__pkginfo__ = {}
+
+with open(str(base_dir.joinpath('geekhours/__pkginfo__.py'))) as f:
+    exec(f.read(), __pkginfo__)
+
+pkginfo_name = __pkginfo__['name']
+pkginfo_version = __pkginfo__['version']
+pkginfo_license = __pkginfo__['license_']
+pkginfo_author = __pkginfo__['author']
+pkginfo_author_email = __pkginfo__['author_email']
+pkginfo_url = __pkginfo__['url']
+pkginfo_maintainer = __pkginfo__['maintainer']
+pkginfo_scripts = __pkginfo__['scripts']
+pkginfo_platforms = __pkginfo__['platforms']
+pkginfo_python_requires = __pkginfo__['python_requires']
+pkginfo_classifiers = __pkginfo__['classifiers']
+pkginfo_description = __pkginfo__['description']
+pkginfo_long_description = __pkginfo__['long_description']
 
 setup(
-    name='geekhours',
-    version='0.0.1',
-    author='Yukie Kato',
-    author_email='yukie.kato.28@gmail.com',
-    maintainer='Mitz Amano',
-    description='Study time management tool',
-    long_description=long_description,
+    name=pkginfo_name,
+    version=pkginfo_version,
+    license=pkginfo_license,
+    description=pkginfo_description,
+    long_description=pkginfo_long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/YukieK/GeekHours.git',
-    license='MIT',
+    author=pkginfo_author,
+    author_email=pkginfo_author_email,
+    url=pkginfo_url,
+    maintainer=pkginfo_maintainer,
+    scripts=pkginfo_scripts,
+    platforms=pkginfo_platforms,
+    python_requires=pkginfo_python_requires,
+    classifiers=pkginfo_classifiers,
     packages=find_packages(),
-    scripts=['bin/geekhours'],
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Environment :: Console',
-        'Operating System :: POSIX :: Linux',
-    ],
-    platforms='Linux',
-    python_requires='~=3.5',
 )
