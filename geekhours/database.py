@@ -80,9 +80,6 @@ class Database:
         Insert donelist into the 'donelist' table.
         The course name must be a registered name in the 'course' table.
         """
-        if date is not str:
-            date = str(date)
-
         check_course_name = self.con.execute('SELECT name FROM course WHERE name=?', (course,))
         check_course_name = check_course_name.fetchall()
         check_duplicate = self.con.execute(
@@ -98,10 +95,19 @@ class Database:
         if check_duplicate:
             raise RuntimeError("Record already exists in 'donelist' table.")
 
-        if len(date) < 10:
-            raise ValueError("The date must be in zero-padded YYYY-MM-DD format.")
+        if not len(date) == 10:
+            raise ValueError("The date must be in YYYY-MM-DD format.")
 
-        date = datetime.strptime(date, '%Y-%m-%d').date()
+        is_valid = True
+        try:
+            date_dt = datetime.strptime(date, '%Y-%m-%d')
+        except ValueError:
+            is_valid = False
+
+        if is_valid:
+            date = date_dt.date()
+        else:
+            raise ValueError('Invalid date')
 
         with self.con:
             self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)', (

@@ -166,6 +166,7 @@ class TestDatabase(unittest.TestCase):
 
         course_name = 'japanese'
         not_zero_padded = '2019-4-1'
+        not_date = '****-**-**'
 
         with self.assertRaises(RuntimeError):
             self.database.insert_donelist(self._date, course_name, self._duration)
@@ -175,6 +176,12 @@ class TestDatabase(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.database.insert_donelist(not_zero_padded, self._course_name, self._duration)
+
+        # ValueError: Invalid date
+        with self.assertRaises(ValueError) as err:
+            self.database.insert_donelist(not_date, self._course_name, self._duration)
+        exception_msg = err.exception
+        print(exception_msg)
 
     def test_remove_course(self):
         """ Test for remove_course()

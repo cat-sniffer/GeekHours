@@ -54,11 +54,15 @@ class TestCommand(unittest.TestCase):
     def test_show_column(self):
         """ Test show_column()
 
-        Assert show_colmun() calls Database.get_column() and
-        no exception is raised.
+        Assert:
+            * show_colmun() calls Database.get_column() and it succeeds.
+            * Returns the colmun names as expected.
         """
-        self._command.show_column('course')
-        self._command.show_column('donelist')
+        course_columns = ['id', 'name']
+        donelist_columns = ['id', 'date', 'course', 'duration']
+
+        self.assertListEqual(self._command.show_column('course'), course_columns)
+        self.assertListEqual(self._command.show_column('donelist'), donelist_columns)
 
     def test_show(self):
         """ Test for show()
@@ -67,10 +71,23 @@ class TestCommand(unittest.TestCase):
             * Command.show() calls the Database.show() and it succeeds.
             * RuntimeError is raised if an invalid table name is passed.
         """
-        self._command.show('course')
-        self._command.show('donelist')
+        # course
+        courses = self._command.show('course')
+        count = 0
+
+        while count < len(courses):
+            print(courses[count][1])
+            self.assertEqual(courses[count][1], self._courses[count])
+            count += 1
+
+        # donelist
+        records = self._command.show('donelist')
+        self.assertEqual(records[0][1], self._date)
+        self.assertEqual(records[0][2], self._course_name_python)
+        self.assertEqual(records[0][3], self._duration)
 
         wrong_name = None
+
         with self.assertRaises(RuntimeError):
             self._command.show(wrong_name)
 
@@ -162,35 +179,175 @@ class TestCommand(unittest.TestCase):
     def test_show_total_hours(self):
         """ Test show_total_hours()
 
-        Assert show_total_hours() calls Database.get_total_hours() and
-        succeeds.
+        Assert that show_total_hours() calls Database.get_total_hours()
+        and returns the total hours as expected.
         """
-        self._command.show_total_hours()
+        expected_res = {
+            'total_hours': {
+                'Total: ': 5
+            },
+            'total_hours_per_course': {
+                'python': 5
+            },
+            'total_hours_per_week': {
+                'Thu': 5
+            },
+            'total_hours_per_month': {
+                'Nov': 5
+            }
+        }
+        self.assertEqual(self._command.show_total_hours(), expected_res)
 
     def test_show_total_hours_course(self):
         """ Test show_total_hours_course()
 
         Assert show_total_hours_course() calls
-        Database.get_total_hours_course() and succeeds.
+        Database.get_total_hours_course() and returns the total hours per
+        course as expected.
         """
-        self._command.show_total_hours_course()
+        self._command.insert_donelist('2019-05-02', self._course_name_math, '3')
+        expected_res = {'total_hours_per_course': {'math': 3, 'python': 5}}
+        self.assertDictEqual(self._command.show_total_hours_course(), expected_res)
+
+        # Cleanup
+        self._command.remove_donelist('2019-05-02', self._course_name_math)
 
     def test_show_total_hours_week(self):
         """ Test show_total_hours_week()
 
         Assert:
             * show_total_hours_week() calls
-              Database.get_total_hours_week() and succeeds.
+              database.get_total_hours_week() and it succeeds.
+            * Returns the total hours per week as expected.
+            * If the course name is passed as an argument, returns the
+              total hours per week for each course.
         """
-        self._command.show_total_hours_week()
-        self._command.show_total_hours_week(self._course_name_python)
+        # Saturday
+        self._command.insert_donelist('2019-06-01', self._course_name_math, '3')
+        self._command.insert_donelist('2019-06-08', self._course_name_math, '3')
+
+        # Thursday
+        self._command.insert_donelist('2019-06-06', self._course_name_python, '5')
+
+        expected_res = {'total_hours_per_week': {'Thu': 10, 'Sat': 6}}
+        self.assertDictEqual(self._command.show_total_hours_week(), expected_res)
+
+        # Cleanup
+        self._command.remove_donelist('2019-06-01', self._course_name_math)
+        self._command.remove_donelist('2019-06-08', self._course_name_math)
+        self._command.remove_donelist('2019-06-06', self._course_name_python)
 
     def test_show_total_hours_month(self):
         """ Test show_total_hours_month()
 
         Assert:
             * show_total_hours_month() calls
-              Database.get_total_hours_month() and succeeds.
+              database.get_total_hours_month() and it succeeds.
+            * Returns the total hours per month as expected.
+            * If the course name is passed as an argument, returns the
+              total hours per month for each course.
         """
-        self._command.show_total_hours_month()
-        self._command.show_total_hours_month(self._course_name_python)
+        # June
+        self._command.insert_donelist('2019-06-01', self._course_name_math, '3')
+        self._command.insert_donelist('2019-06-08', self._course_name_math, '3')
+
+        # November
+        self._command.insert_donelist('2019-11-01', self._course_name_python, '5')
+
+        expected_res_total = {'total_hours_per_month': {'Jun': 6, 'Nov': 10}}
+        expected_res_math = {'total_hours_per_month': {'Jun': 6}}
+        expected_res_python = {'total_hours_per_month': {'Nov': 10}}
+
+        self.assertDictEqual(self._command.show_total_hours_month(), expected_res_total)
+        self.assertDictEqual(self._command.show_total_hours_month(course='python'),
+                             expected_res_python)
+        self.assertDictEqual(self._command.show_total_hours_month(course='math'),
+                             expected_res_math)
+
+        # Cleanup
+        self._command.remove_donelist('2019-06-01', self._course_name_math)
+        self._command.remove_donelist('2019-06-08', self._course_name_math)
+        self._command.remove_donelist('2019-11-01', self._course_name_python)
+
+    def test_name_months_and_days(self):
+        """ Test name_months_and_days()
+
+        Assert that the method succeeds with no error and returns
+        names of the months and the days of week.
+        """
+        month_day_nums = [
+            ('01', 1),
+            ('02', 2),
+            ('12', 12),
+            ('0', 1),
+            ('1', 10),
+            ('6', 60),
+        ]
+        expected_res = [
+            ('Jan', 1),
+            ('Feb', 2),
+            ('Dec', 12),
+            ('Sun', 1),
+            ('Mon', 10),
+            ('Sat', 60),
+        ]
+        self.assertEqual(self._command.name_months_and_days(month_day_nums), expected_res)
+
+    def test_map_keys_to_seq(self):
+        """ Test map_keys_to_seq()
+
+        Assert that the method succeeds with no error and returns
+        a expected dictionary.
+        """
+        keys = ['per_course', 'per_month']
+        total_per_course = [('art', 200), ('math', 100)]
+        total_per_month = [('Apr', 200), ('May', 200)]
+
+        expected_res = ({
+            'per_course': [('art', 200), ('math', 100)],
+            'per_month': [('Apr', 200), ('May', 200)]
+        })
+        self.assertDictEqual(
+            self._command.map_keys_to_seq(keys, total_per_course, total_per_month), expected_res)
+
+    def test_make_dict_from_sequence(self):
+        """ Test make_dict_from_sequence()
+
+        Assert that the method succeeds with no error and returns
+        a expected dictionary.
+        """
+        total_courses = [('art', 31), ('eng', 73), ('math', 100), ('python', 105)]
+        total_days = [('Sun', 36), ('Mon', 55), ('Tue', 45), ('Wed', 22), ('Thu', 54), ('Fri', 39),
+                      ('Sat', 58)]
+        total_months = [('Apr', 233), ('May', 76)]
+
+        expected_total_courses = {'art': 31, 'eng': 73, 'math': 100, 'python': 105}
+        expected_total_days = {
+            'Sun': 36,
+            'Mon': 55,
+            'Tue': 45,
+            'Wed': 22,
+            'Thu': 54,
+            'Fri': 39,
+            'Sat': 58
+        }
+        expected_total_months = {'Apr': 233, 'May': 76}
+
+        self.assertDictEqual(self._command.make_dict_from_sequence(total_courses),
+                             expected_total_courses)
+        self.assertDictEqual(self._command.make_dict_from_sequence(total_days),
+                             expected_total_days)
+        self.assertDictEqual(self._command.make_dict_from_sequence(total_months),
+                             expected_total_months)
+
+    def test_map_keys_to_dict(self):
+        """ Test map_keys_to_dict()
+
+        Assert that the method succeeds with no error and returns
+        a expected dictionary.
+        """
+        keys = ["total_hours_per_course"]
+        seq = [('cooking', 5), ('history', 6)]
+        records = self._command.map_keys_to_dict(keys, seq)
+        expected_res = {"total_hours_per_course": {"cooking": 5, "history": 6}}
+        self.assertDictEqual(records, expected_res)
