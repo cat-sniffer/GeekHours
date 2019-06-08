@@ -9,6 +9,7 @@ geekhours is a simple study time management tool.
 
 optional arguments:
   -h, --help     show this help message
+  --version      show program's version number and exit
 
 Synopsis:
   geekhours course list
