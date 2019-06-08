@@ -3,6 +3,8 @@
 
 import argparse
 import json
+import geekhours.__pkginfo__
+
 from os import path, getenv
 from typing import Dict, List
 from datetime import date, datetime
@@ -200,6 +202,9 @@ def get_args(today: str):
         help="Sub commands.")
 
     subparsers.required = True
+
+    # geekhours --version
+    parser.add_argument('--version', action='version', version=geekhours.__pkginfo__.version)
 
     # course command
     course_parser = subparsers.add_parser('course', help='Manipulate course.')
