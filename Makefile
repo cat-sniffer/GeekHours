@@ -3,7 +3,7 @@ CURRENT_DIR = $(CURDIR)
 
 # Execute as root
 setup:
-	pip3 install -U pylint pytest pycodestyle yapf --user
+	pip3 install -U pylint pytest pycodestyle yapf wheel --user
 
 test_all:
 	python3 -m unittest discover -v -s geekhours/test/

@@ -3,15 +3,15 @@
 ## Usage
 ```
 $ geekhours -h
-usage: geekhours [-h] {course,done} ...
+usage: geekhours [-h] {course,done,sum} ...
 
-geekhours is a simple study time management tool.
+Geekhours is a simple study time management tool.
 
 optional arguments:
   -h, --help     show this help message
   --version      show program's version number and exit
 
-Synopsis:
+subcommands:
   geekhours course list
   geekhours course add course_name [course_name ...]
   geekhours course rm course_name
@@ -23,10 +23,10 @@ Synopsis:
   geekhours sum week [-c|--course [course_name]]
   geekhours sum month [-c|--course [course_name]]
 
-  {course,done,sum}  Sub commands.
-    course           Manipulate course.
-    done             Manipulate done.
-    sum              Display the total hours studied.
+  {course,done,sum}  subcommands
+    course           Add/list/remove courses.
+    done             Add/list/remove study time.
+    sum              Display the total hours.
 ```
 
 ## Add courses

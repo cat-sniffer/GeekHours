@@ -6,6 +6,7 @@ import json
 import geekhours.__pkginfo__
 
 from os import path, getenv
+from sys import argv
 from typing import Dict, List
 from datetime import date, datetime
 from geekhours.command import Command
@@ -184,30 +185,37 @@ def _output_in_JSON(contents: Dict) -> str:
     """
     return json.dumps(contents, indent=4)
 
+
+DESCRIPTION = ("""
+  geekhours course list
+  geekhours course add course_name [course_name ...]
+  geekhours course rm course_name
+  geekhours done list
+  geekhours done add [--date [date]] [--duration [duration]] course_name
+  geekhours done rm date course_name
+  geekhours sum
+  geekhours sum course
+  geekhours sum week [-c|--course [course_name]]
+  geekhours sum month [-c|--course [course_name]] """)
+
+
 def get_args(today: str):
-    """ Parsers for 'corse' and 'done' sub-commands """
+    """ Parsers for 'corse', 'done' and 'sum' sub-commands """
+
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description='Geekhours is a management tool for the study time.')
+        prog='geekhours',
+        usage='%(prog)s [-h] {course,done,sum} ...',
+        description='Geekhours is a simple study time management tool.')
 
-    subparsers = parser.add_subparsers(
-        title='Synopsis',
-        description=
-        'geekhours course list\n'
-        'geekhours course add course_name [course_name ...]\n'
-        'geekhours course rm course_name\n'
-        'geekhours done list\n'
-        'geekhours done add [--date [date]] [--duration [duration]] course_name\n'
-        'geekhours done rm date course_name',
-        help="Sub commands.")
-
+    subparsers = parser.add_subparsers(description=DESCRIPTION, help='subcommands')
     subparsers.required = True
 
     # geekhours --version
     parser.add_argument('--version', action='version', version=geekhours.__pkginfo__.version)
 
     # course command
-    course_parser = subparsers.add_parser('course', help='Manipulate course.')
+    course_parser = subparsers.add_parser('course', help='Add/list/remove courses.')
 
     # course's sub-command
     course_subparser = course_parser.add_subparsers()
@@ -235,7 +243,7 @@ def get_args(today: str):
     list_parser.add_argument('-o', '--output', help="Specify a file path to save.")
 
     # done commnad
-    done_parser = subparsers.add_parser('done', help='Manipulate done.')
+    done_parser = subparsers.add_parser('done', help='Add/list/remove study time.')
 
     # done's sub-command
     done_subparser = done_parser.add_subparsers()
@@ -279,7 +287,7 @@ def get_args(today: str):
     done_list_parser.set_defaults(done='donelist', handler=list_done)
 
     # geekhours sum
-    sum_parser = subparsers.add_parser('sum', help='Display the total hours studied.')
+    sum_parser = subparsers.add_parser('sum', help='Display the total hours.')
     sum_parser.set_defaults(handler=sum_hours)
 
     # Sub-command of 'geekshours sum'
@@ -308,12 +316,22 @@ def get_args(today: str):
 
 def main():
     """ main """
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     prog='geekhours',
+                                     usage='%(prog)s [-h] {course,done,sum} ...',
+                                     description=DESCRIPTION)
+
+    if len(argv) == 1:
+        parser.print_help()
+        exit(1)
+
     db_path, today = initialize()
+
     args = get_args(today)
+
     if hasattr(args, 'handler'):
         args.handler(args, db_path)
     else:
-        parser = argparse.ArgumentParser()
         parser.print_help()
 
 
