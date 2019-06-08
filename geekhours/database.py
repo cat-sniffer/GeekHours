@@ -1,5 +1,6 @@
 """ database.py is a module to communicate with a database. """
 
+from datetime import datetime
 import sqlite3
 from typing import List
 
@@ -94,6 +95,20 @@ class Database:
         if check_duplicate:
             raise RuntimeError("Record already exists in 'donelist' table.")
 
+        if len(date) != 10:
+            raise ValueError("The date must be in YYYY-MM-DD format.")
+
+        is_valid = True
+        try:
+            date_dt = datetime.strptime(date, '%Y-%m-%d')
+        except ValueError:
+            is_valid = False
+
+        if is_valid:
+            date = date_dt.date()
+        else:
+            raise ValueError('Invalid date')
+
         with self.con:
             self.con.execute('INSERT INTO donelist(date, course, duration) VALUES (?, ?, ?)', (
                 date,
@@ -134,3 +149,80 @@ class Database:
                 course,
             ))
             print('Removed record.')
+
+    def get_total_hours(self):
+        """ Get the total hours
+
+        Get the total number of hours and return it.
+        """
+        with self.con:
+            total = self.cur.execute(
+                ("SELECT 'Total: ', SUM(donelist.duration) FROM donelist")).fetchall()
+
+        return total
+
+    def get_total_hours_course(self):
+        """ Get the total hours per course
+
+        Get the total number of hours per course and return it.
+        """
+        with self.con:
+            total = self.cur.execute(("SELECT course.name, SUM(donelist.duration) "
+                                      "FROM donelist "
+                                      "INNER JOIN course ON course.name = donelist.course "
+                                      "GROUP BY course.name")).fetchall()
+        return total
+
+    def get_total_hours_week(self, course: str = None):
+        """ Get the total hours per week
+
+        Get the total number of hours per week and return it.
+        If the course name is passed as an argument, return the total
+        hours per week for each course.
+
+        Args:
+            course: Target course name to get the total hours.
+        """
+        with self.con:
+            if not course:
+                total = self.cur.execute(
+                    ("SELECT strftime('%w', donelist.date) AS week, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "GROUP BY week")).fetchall()
+            else:
+                total = self.cur.execute(
+                    ("SELECT strftime('%w', donelist.date) AS week, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "WHERE course=? "
+                     "GROUP BY week"), (course,)).fetchall()
+
+        return total
+
+    def get_total_hours_month(self, course=None):
+        """ Get the total hours per month
+
+        Get the total number of hours per month and return it.
+        If the course name is passed as an argument, return the total
+        hours per month for each course.
+
+        Args:
+            course: Target course name to get the total hours.
+        """
+        with self.con:
+            if not course:
+                total = self.cur.execute(
+                    ("SELECT strftime('%m', donelist.date) AS month, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "GROUP BY month")).fetchall()
+            else:
+                total = self.cur.execute(
+                    ("SELECT strftime('%m', donelist.date) AS month, SUM(donelist.duration) "
+                     "FROM donelist "
+                     "INNER JOIN course ON course.name = donelist.course "
+                     "WHERE course=? "
+                     "GROUP BY month"), (course,)).fetchall()
+
+        return total

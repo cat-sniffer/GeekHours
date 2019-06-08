@@ -17,10 +17,15 @@ Synopsis:
   geekhours done list
   geekhours done add [--date [date]] [--duration [duration]] course_name
   geekhours done rm date course_name
+  geekhours sum
+  geekhours sum course
+  geekhours sum week [-c|--course [course_name]]
+  geekhours sum month [-c|--course [course_name]]
 
-  {course,done}  Sub commands.
-    course       Manipulate course.
-    done         Manipulate done.
+  {course,done,sum}  Sub commands.
+    course           Manipulate course.
+    done             Manipulate done.
+    sum              Display the total hours studied.
 ```
 
 ## Add courses
@@ -121,4 +126,111 @@ Removed record.
 ```
 $ geekhours course rm English
 Removed 'English' from course.
+```
+
+## Display the total hours
+
+```
+$ geekhours sum
+{
+    "total_hours": {
+        "Total: ": 311.5
+    },
+    "total_hours_per_course": {
+        "art": 31,
+        "eng": 74,
+        "math": 100,
+        "python": 106.5
+    },
+    "total_hours_per_week": {
+        "Sun": 36,
+        "Mon": 55.5,
+        "Tue": 45,
+        "Wed": 22,
+        "Thu": 56,
+        "Fri": 39,
+        "Sat": 58
+    },
+    "total_hours_per_month": {
+        "Apr": 233,
+        "May": 78.5
+    }
+}
+```
+
+## Total hours per course
+
+```
+$ geekhours sum course
+{
+    "total_hours_per_course": {
+        "art": 31,
+        "eng": 74,
+        "math": 100,
+        "python": 106.5
+    }
+}
+```
+
+### Total hours per week
+
+```
+$ geekhours sum week
+{
+    "total_hours_per_week": {
+        "Sun": 36,
+        "Mon": 55.5,
+        "Tue": 45,
+        "Wed": 22,
+        "Thu": 56,
+        "Fri": 39,
+        "Sat": 58
+    }
+}
+```
+
+#### Total hours per week by course
+
+To get the total number of hours per week for each course,
+specify a course name to `-c` or `--course` options.
+
+```
+$ geekhours sum week -c art
+{
+    "total_hours_per_week": {
+        "Mon": 5,
+        "Tue": 2,
+        "Wed": 3,
+        "Thu": 17,
+        "Fri": 1,
+        "Sat": 3
+    }
+}
+```
+
+### Total hours per month
+
+```
+$ geekhours sum month
+{
+    "total_hours_per_month": {
+        "Apr": 233,
+        "May": 78.5
+    }
+}
+```
+
+#### Total hours per month by course
+
+To get the total number of hours per month for each course,
+specify a course name to `-c` or `--course` options.
+
+```
+$ geekhours sum month --course art
+{
+    "total_hours_per_month": {
+        "Apr": 23,
+        "May": 8
+    }
+}
 ```
