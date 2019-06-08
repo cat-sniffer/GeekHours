@@ -56,24 +56,21 @@ class Command:
         """ Call database.get_total_hours_course() """
         key = ['total_hours_per_course']
         records = self.database.get_total_hours_course()
-        formatted = self.map_keys_to_dict(key, records)
-        return formatted
+        return self.map_keys_to_dict(key, records)
 
     def show_total_hours_week(self, course: str = None):
         """ Call database.get_total_hours_week() """
         key = ['total_hours_per_week']
         records = self.database.get_total_hours_week(course)
         records = self.name_months_and_days(records)
-        formatted = self.map_keys_to_dict(key, records)
-        return formatted
+        return self.map_keys_to_dict(key, records)
 
     def show_total_hours_month(self, course: str = None):
         """ Call database.get_total_hours_month() """
         key = ['total_hours_per_month']
         records = self.database.get_total_hours_month(course)
         records = self.name_months_and_days(records)
-        formatted = self.map_keys_to_dict(key, records)
-        return formatted
+        return self.map_keys_to_dict(key, records)
 
     def map_keys_to_dict(self, keys: List, seq: List) -> Dict:
         """

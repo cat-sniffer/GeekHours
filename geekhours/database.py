@@ -95,7 +95,7 @@ class Database:
         if check_duplicate:
             raise RuntimeError("Record already exists in 'donelist' table.")
 
-        if not len(date) == 10:
+        if len(date) != 10:
             raise ValueError("The date must be in YYYY-MM-DD format.")
 
         is_valid = True
