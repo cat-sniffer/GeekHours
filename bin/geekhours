@@ -200,7 +200,7 @@ DESCRIPTION = ("""
 
 
 def get_args(today: str):
-    """ Parsers for 'corse', 'done' and 'sum' sub-commands """
+    """ Parsers for 'course', 'done' and 'sum' sub-commands """
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
